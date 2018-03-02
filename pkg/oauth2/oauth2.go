@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gojekfarm/tanker/pkg/requester"
+	"github.com/build-tanker/archer"
 )
 
 // More details here - https://developers.google.com/identity/protocols/OAuth2WebServer#protectauthcode
@@ -34,7 +34,7 @@ type OAuth2 interface {
 }
 
 type oAuth2 struct {
-	r            requester.Requester
+	a            archer.Archer
 	clientID     string
 	clientSecret string
 	redirectURL  string
@@ -55,12 +55,12 @@ func NewOAuth2(clientID, clientSecret, redirectURL string) (OAuth2, error) {
 		return oAuth2{}, errors.New("oauth2: Please enter a redirect URL for Google Auth")
 	}
 
-	r := requester.NewRequester(2 * time.Second)
+	a := archer.NewArcher(2 * time.Second)
 	return oAuth2{
 		clientID:     clientID,
 		clientSecret: clientSecret,
 		redirectURL:  redirectURL,
-		r:            r,
+		a:            a,
 	}, nil
 }
 
@@ -95,7 +95,7 @@ func (o oAuth2) GetToken(code string) ([]byte, error) {
 	v.Set("grant_type", "authorization_code")
 	s := v.Encode()
 
-	body, err := o.r.Post(getTokenURL, strings.NewReader(s))
+	body, err := o.a.Post(getTokenURL, strings.NewReader(s))
 	if err != nil {
 		return []byte{}, err
 	}

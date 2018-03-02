@@ -5,11 +5,11 @@ import (
 
 	"github.com/urfave/cli"
 
-	"github.com/gojekfarm/tanker/pkg/appcontext"
-	"github.com/gojekfarm/tanker/pkg/config"
-	"github.com/gojekfarm/tanker/pkg/logger"
-	"github.com/gojekfarm/tanker/pkg/postgres"
-	"github.com/gojekfarm/tanker/pkg/server"
+	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/config"
+	"github.com/build-tanker/passport/pkg/logger"
+	"github.com/build-tanker/passport/pkg/postgres"
+	"github.com/build-tanker/passport/pkg/server"
 )
 
 func main() {
@@ -19,10 +19,10 @@ func main() {
 	db := postgres.NewPostgres(logger, config.Database().ConnectionURL(), config.Database().MaxPoolSize())
 	server := server.NewServer(ctx, db)
 
-	logger.Infoln("Starting tanker")
+	logger.Infoln("Starting passport")
 
 	app := cli.NewApp()
-	app.Name = "tanker"
+	app.Name = "passport"
 	app.Version = "0.0.1"
 	app.Usage = "this service saves files and makes them available for distribution"
 

@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config - structure to hold the configuration for tanker
+// Config - structure to hold the configuration for passport
 type Config struct {
 	fileStore              string
 	port                   string
@@ -29,7 +29,7 @@ func NewConfig(paths []string) *Config {
 		viper.AddConfigPath(path)
 	}
 
-	viper.SetConfigName("tanker")
+	viper.SetConfigName("passport")
 	viper.SetConfigType("toml")
 
 	viper.SetDefault("application.fileStore", "googlecloud")
