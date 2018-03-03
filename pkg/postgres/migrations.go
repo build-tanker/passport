@@ -9,10 +9,12 @@ import (
 	"database/sql"
 
 	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/translate"
 )
 
 const migrationsPath = "file://./pkg/postgres/migrations"
 
+// RunDatabaseMigrations - run the next migration, needs to be run multiple times if there are multiple
 func RunDatabaseMigrations(ctx *appcontext.AppContext) error {
 	db, err := sql.Open("postgres", ctx.GetConfig().Database().ConnectionURL())
 
@@ -24,7 +26,7 @@ func RunDatabaseMigrations(ctx *appcontext.AppContext) error {
 
 	err = m.Up()
 	if err == migrate.ErrNoChange {
-		ctx.GetLogger().Infoln("Sadly, found no new migrations to run")
+		ctx.GetLogger().Infoln(translate.T("postgres:migration:up:fail"))
 		return nil
 	}
 
@@ -32,10 +34,11 @@ func RunDatabaseMigrations(ctx *appcontext.AppContext) error {
 		return err
 	}
 
-	ctx.GetLogger().Infoln("Migration has been successfully done")
+	ctx.GetLogger().Infoln(translate.T("postgres:migration:up:success"))
 	return nil
 }
 
+// RollbackDatabaseMigration - rollback the database migration
 func RollbackDatabaseMigration(ctx *appcontext.AppContext) error {
 	m, err := migrate.New(migrationsPath, ctx.GetConfig().Database().ConnectionURL())
 	if err != nil {
@@ -43,10 +46,10 @@ func RollbackDatabaseMigration(ctx *appcontext.AppContext) error {
 	}
 
 	if err := m.Steps(-1); err != nil {
-		ctx.GetLogger().Infoln("We have already removed all migrations")
+		ctx.GetLogger().Infoln(translate.T("postgres:migration:down:fail"))
 		return nil
 	}
 
-	ctx.GetLogger().Infoln("Rollback Successful")
+	ctx.GetLogger().Infoln(translate.T("postgres:migration:down:success"))
 	return nil
 }

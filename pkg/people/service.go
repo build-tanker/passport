@@ -5,6 +5,7 @@ import (
 
 	"github.com/build-tanker/oauth2"
 	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/translate"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -34,7 +35,7 @@ func NewService(ctx *appcontext.AppContext, db *sqlx.DB) Service {
 
 	oauth, err := oauth2.NewOAuth2(clientID, clientSecret, redirctURL)
 	if err != nil {
-		ctx.GetLogger().Fatalln("Could not initialise OAuth2 Client")
+		ctx.GetLogger().Fatalln(translate.T("people:oauth:failed"))
 	}
 
 	return &service{ctx, datastore, oauth}

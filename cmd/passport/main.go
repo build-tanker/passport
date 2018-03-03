@@ -10,6 +10,7 @@ import (
 	"github.com/build-tanker/passport/pkg/logger"
 	"github.com/build-tanker/passport/pkg/postgres"
 	"github.com/build-tanker/passport/pkg/server"
+	"github.com/build-tanker/passport/pkg/translate"
 )
 
 func main() {
@@ -19,31 +20,31 @@ func main() {
 	db := postgres.NewPostgres(logger, config.Database().ConnectionURL(), config.Database().MaxPoolSize())
 	server := server.NewServer(ctx, db)
 
-	logger.Infoln("Starting passport")
+	logger.Infoln(translate.T("passport:app:start"))
 
 	app := cli.NewApp()
 	app.Name = "passport"
 	app.Version = "0.0.1"
-	app.Usage = "this service saves files and makes them available for distribution"
+	app.Usage = translate.T("passport:app:usage")
 
 	app.Commands = []cli.Command{
 		{
 			Name:  "start",
-			Usage: "start the service",
+			Usage: translate.T("passport:cli:start"),
 			Action: func(c *cli.Context) error {
 				return server.Start()
 			},
 		},
 		{
 			Name:  "migrate",
-			Usage: "run database migrations",
+			Usage: translate.T("passport:cli:migrate"),
 			Action: func(c *cli.Context) error {
 				return postgres.RunDatabaseMigrations(ctx)
 			},
 		},
 		{
 			Name:  "rollback",
-			Usage: "rollback the latest database migration",
+			Usage: translate.T("passport:cli:rollback"),
 			Action: func(c *cli.Context) error {
 				return postgres.RollbackDatabaseMigration(ctx)
 			},

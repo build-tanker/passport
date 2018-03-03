@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/build-tanker/passport/pkg/translate"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -37,7 +38,7 @@ func NewConfig(paths []string) *Config {
 
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		fmt.Printf("Config file %s was edited, reloading config\n", e.Name)
+		fmt.Printf(translate.T("config:change:reload"), e.Name)
 		config.readLatestConfig()
 	})
 
@@ -77,12 +78,12 @@ func (c *Config) readLatestConfig() {
 
 	c.oauthClientID = viper.GetString("oauth2.id")
 	if c.oauthClientID == "" {
-		log.Fatalln("Please enter the OAuth2 Client ID")
+		log.Fatalln(translate.T("config:oauth2clientid:fail"))
 	}
 
 	c.oauthClientSecret = viper.GetString("oauth2.secret")
 	if c.oauthClientSecret == "" {
-		log.Fatalln("Please enter the OAuth2 Client Secret")
+		log.Fatalln(translate.T("config:oauth2clientsecret:fail"))
 	}
 
 	c.database = NewDatabaseConfig()

@@ -11,6 +11,7 @@ import (
 	"github.com/urfave/negroni"
 
 	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/translate"
 )
 
 // Server holds the web server
@@ -52,12 +53,12 @@ func (s *Server) Start() error {
 		Handler:      server,
 	}
 
-	log.Infoln("[negroni] Listening on ", serverURL)
+	log.Infoln(translate.T("server:negroni:listen"), serverURL)
 	go func() {
 		err := s.server.ListenAndServe()
 		if err != nil {
-			if err.Error() != "http: Server closed" {
-				fmt.Println("Server: the server is not running anymore,", err.Error())
+			if err.Error() != "http: Server closed" { // This is an error response not an error code
+				fmt.Println(translate.T("server:listen:fail"), err.Error())
 			}
 		}
 	}()
@@ -78,7 +79,7 @@ func recover() negroni.HandlerFunc {
 	return negroni.HandlerFunc(func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		defer func() {
 			if err := recover(); err != nil {
-				fmt.Printf("Recovered from panic: %+v", err)
+				fmt.Printf(translate.T("server:panic:recover"), err)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
