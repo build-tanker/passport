@@ -3,6 +3,10 @@
 [server]
 port = "3000"
 
+[oauth2]
+id = "testOauth2ID"
+secret = "testOauth2Secret"
+
 [database]
 name = "passport"
 user = "passport"

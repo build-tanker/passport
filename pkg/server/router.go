@@ -18,14 +18,11 @@ func Router(ctx *appcontext.AppContext, db *sqlx.DB) http.Handler {
 	pingHandler := pings.PingHandler{}
 
 	router := mux.NewRouter()
-	// GET___ .../ping
+	// GET__ .../ping
 	router.HandleFunc("/ping", pingHandler.Ping(ctx)).Methods(http.MethodGet)
 
-	// Auth
-	// POST .../v1/users source=google&access_token=tkn&name=name&email=email&user_id=123
-	// GET .../v1/users/15
-	// PUT .../v1/users/15 access_token=tkn&name=name&deleted=true
-	// DELETE .../v1/users/15
+	// GET__ .../login
+	// POST_ .../v1/users source=google&access_token=tkn&name=name&email=email&user_id=123
 
 	return router
 }

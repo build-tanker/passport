@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -9,8 +10,11 @@ import (
 
 // Config - structure to hold the configuration for passport
 type Config struct {
-	port     string
-	database DatabaseConfig
+	port              string
+	host              string
+	database          DatabaseConfig
+	oauthClientID     string
+	oauthClientSecret string
 }
 
 // NewConfig - create a new configuration
@@ -27,6 +31,7 @@ func NewConfig(paths []string) *Config {
 	viper.SetConfigType("toml")
 
 	viper.SetDefault("server.port", "4000")
+	viper.SetDefault("server.host", "http://localhost")
 
 	viper.ReadInConfig()
 
@@ -46,6 +51,21 @@ func (c *Config) Port() string {
 	return c.port
 }
 
+// Host - get the host from config
+func (c *Config) Host() string {
+	return c.host
+}
+
+// OAuthClientID - get the oauth client id
+func (c *Config) OAuthClientID() string {
+	return c.oauthClientID
+}
+
+// OAuthClientSecret - get the oauth client secret
+func (c *Config) OAuthClientSecret() string {
+	return c.oauthClientSecret
+}
+
 // Database - load the database config
 func (c *Config) Database() DatabaseConfig {
 	return c.database
@@ -53,5 +73,17 @@ func (c *Config) Database() DatabaseConfig {
 
 func (c *Config) readLatestConfig() {
 	c.port = viper.GetString("server.port")
+	c.host = viper.GetString("server.host")
+
+	c.oauthClientID = viper.GetString("oauth2.id")
+	if c.oauthClientID == "" {
+		log.Fatalln("Please enter the OAuth2 Client ID")
+	}
+
+	c.oauthClientSecret = viper.GetString("oauth2.secret")
+	if c.oauthClientSecret == "" {
+		log.Fatalln("Please enter the OAuth2 Client Secret")
+	}
+
 	c.database = NewDatabaseConfig()
 }
