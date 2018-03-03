@@ -32,11 +32,11 @@ func NewHandler(ctx *appcontext.AppContext, db *sqlx.DB) Handler {
 
 func (h *handler) Add() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := h.service.Add()
-		if err != nil {
-			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:signup:error", err.Error()))
-			return
-		}
+		// err := h.service.Add()
+		// if err != nil {
+		// 	responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:signup:error", err.Error()))
+		// 	return
+		// }
 
 		responses.WriteJSON(w, http.StatusOK, &responses.Response{
 			Success: "true",

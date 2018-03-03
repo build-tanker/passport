@@ -55,7 +55,7 @@ func (s *service) Login() (string, error) {
 }
 
 func (s *service) Add(code string) error {
-	verified, accessToken, tokenType, expiresIn, refreshToken, idToken, userID, err := s.oauth.GetAndVerifyToken(code)
+	verified, accessToken, tokenType, expiresIn, refreshToken, _, _, err := s.oauth.GetAndVerifyToken(code)
 	if err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func (s *service) Add(code string) error {
 		return err
 	}
 	// Saving token
-	err := s.tokens.Add(personID, "google", accessToken, refreshToken, expiresIn, tokenType)
+	err = s.tokens.Add(personID, "google", accessToken, refreshToken, expiresIn, tokenType)
 	if err != nil {
 		return err
 	}
