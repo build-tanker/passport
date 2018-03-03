@@ -28,6 +28,7 @@ type Person struct {
 type Datastore interface {
 	Add(source, name, email, pictureURL, gender, sourceID string) (string, error)
 	View(id string) (Person, error)
+	ViewBySourceID(sourceID string) (Person, error)
 	Delete(id string) error
 }
 
@@ -52,6 +53,10 @@ func (s *datastore) Add(source, name, email, pictureURL, gender, sourceID string
 }
 
 func (s *datastore) View(id string) (Person, error) {
+	return Person{}, nil
+}
+
+func (s *datastore) ViewBySourceID(sourceID string) (Person, error) {
 	return Person{}, nil
 }
 

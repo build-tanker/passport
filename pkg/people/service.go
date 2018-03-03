@@ -71,12 +71,20 @@ func (s *service) Add(code string) error {
 	}
 
 	// If token is verified, save person and token details
-	// Saving person
-	personID, err := s.datastore.Add("google", name, email, image, gender, id)
+	personID := ""
+
+	person, err := s.datastore.ViewBySourceID(id)
 	if err != nil {
-		return err
+		// Saving person if not found
+		personID, err = s.datastore.Add("google", name, email, image, gender, id)
+		if err != nil {
+			return err
+		}
 	}
-	// Saving token
+	// Otherwise use the found person
+	personID = person.ID
+
+	// Add a new token
 	err = s.tokens.Add(personID, "google", accessToken, refreshToken, expiresIn, tokenType)
 	if err != nil {
 		return err
