@@ -1,4 +1,4 @@
-package people
+package tokens
 
 import (
 	"net/http"
@@ -14,8 +14,6 @@ type httpHandler func(w http.ResponseWriter, r *http.Request)
 
 // Handler for people
 type Handler interface {
-	Login() httpHandler
-	Add() httpHandler
 }
 
 type handler struct {
@@ -32,22 +30,9 @@ func NewHandler(ctx *appcontext.AppContext, db *sqlx.DB) Handler {
 	}
 }
 
-func (h *handler) Login() httpHandler {
-	return func(w http.ResponseWriter, r *http.Request) {
-		url, err := h.service.Login()
-		if err != nil {
-			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("people:login:error", err.Error()))
-			return
-		}
-
-		http.Redirect(w, r, url, 301)
-	}
-}
-
 func (h *handler) Add() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
-		code := h.parseKeyFromQuery(r, "code")
-		err := h.service.Add(code)
+		err := h.service.Add()
 		if err != nil {
 			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:signup:error", err.Error()))
 			return

@@ -17,6 +17,8 @@ type Person struct {
 	Name       string    `db:"name" json:"name,omitempty"`
 	Email      string    `db:"email" json:"email,omitempty"`
 	PictureURL string    `db:"pictureURL" json:"pictureURL,omitempty"`
+	Gender     string    `db:"gender" json:"gender,omitempty"`
+	SourceID   string    `db:"source_id" json:"source_id,omitempty"`
 	Deleted    bool      `db:"deleted" json:"deleted,omitempty"`
 	CreatedAt  time.Time `db:"created_at" json:"created_at,omitempty"`
 	UpdatedAt  time.Time `db:"updated_at" json:"updated_at,omitempty"`
@@ -24,7 +26,7 @@ type Person struct {
 
 // Datastore for people
 type Datastore interface {
-	Add(source, name, email, pictureURL string) (string, error)
+	Add(source, name, email, pictureURL, gender, sourceID string) (string, error)
 	View(id string) (Person, error)
 	Delete(id string) error
 }
@@ -44,7 +46,7 @@ func NewDatastore(ctx *appcontext.AppContext, db *sqlx.DB) Datastore {
 	}
 }
 
-func (s *datastore) Add(source, name, email, pictureURL string) (string, error) {
+func (s *datastore) Add(source, name, email, pictureURL, gender, sourceID string) (string, error) {
 	id := s.generateUUID()
 	return id, nil
 }

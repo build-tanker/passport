@@ -7,6 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/people"
 	"github.com/build-tanker/passport/pkg/pings"
 )
 
@@ -16,13 +17,18 @@ type httpHandler func(w http.ResponseWriter, r *http.Request)
 func Router(ctx *appcontext.AppContext, db *sqlx.DB) http.Handler {
 
 	pingHandler := pings.PingHandler{}
+	peopleHandler := people.NewHandler(ctx, db)
 
 	router := mux.NewRouter()
 	// GET__ .../ping
 	router.HandleFunc("/ping", pingHandler.Ping(ctx)).Methods(http.MethodGet)
 
 	// GET__ .../login
+	router.HandleFunc("/login", peopleHandler.Login()).Methods(http.MethodGet)
 	// POST_ .../v1/users source=google&access_token=tkn&name=name&email=email&user_id=123
+	router.HandleFunc("/v1/users", peopleHandler.Add()).Methods(http.MethodGet)
+
+	// http://localhost:3000/v1/users?code=4%2FAACqC5q123CTDUUKHCepsD-1fbYupBtGKDw_8TnN8Dk-DR4b3Y6kMfdEn2miNtMNCbyYyvV7W5MfTp9v5tV5zw8&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile#
 
 	return router
 }
