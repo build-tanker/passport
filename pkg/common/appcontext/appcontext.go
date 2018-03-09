@@ -1,8 +1,8 @@
 package appcontext
 
 import (
-	"github.com/build-tanker/passport/pkg/config"
-	"github.com/build-tanker/passport/pkg/logger"
+	"github.com/build-tanker/passport/pkg/common/config"
+	"github.com/build-tanker/passport/pkg/common/logger"
 )
 
 // AppContext - global context for config and logging

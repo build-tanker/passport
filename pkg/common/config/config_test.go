@@ -3,7 +3,7 @@ package config_test
 import (
 	"testing"
 
-	"github.com/build-tanker/passport/pkg/config"
+	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/stretchr/testify/assert"
 )
 

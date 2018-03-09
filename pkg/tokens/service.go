@@ -1,7 +1,7 @@
 package tokens
 
 import (
-	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/jmoiron/sqlx"
 )
 

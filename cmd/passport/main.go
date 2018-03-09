@@ -5,11 +5,11 @@ import (
 
 	"github.com/urfave/cli"
 
-	"github.com/build-tanker/passport/pkg/appcontext"
-	"github.com/build-tanker/passport/pkg/config"
-	"github.com/build-tanker/passport/pkg/logger"
-	"github.com/build-tanker/passport/pkg/postgres"
-	"github.com/build-tanker/passport/pkg/server"
+	"github.com/build-tanker/passport/pkg/common/appcontext"
+	"github.com/build-tanker/passport/pkg/common/config"
+	"github.com/build-tanker/passport/pkg/common/logger"
+	"github.com/build-tanker/passport/pkg/common/postgres"
+	"github.com/build-tanker/passport/pkg/common/server"
 	"github.com/build-tanker/passport/pkg/translate"
 )
 

@@ -6,8 +6,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/build-tanker/passport/pkg/appcontext"
-	"github.com/build-tanker/passport/pkg/logger"
+	"github.com/build-tanker/passport/pkg/common/appcontext"
+	"github.com/build-tanker/passport/pkg/common/logger"
 )
 
 // Person saves details for a user

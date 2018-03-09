@@ -4,7 +4,7 @@ import (
 	"io"
 	"log"
 
-	"github.com/build-tanker/passport/pkg/config"
+	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/sirupsen/logrus"
 )
 

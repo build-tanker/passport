@@ -10,7 +10,7 @@ import (
 	"github.com/phyber/negroni-gzip/gzip"
 	"github.com/urfave/negroni"
 
-	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/translate"
 )
 

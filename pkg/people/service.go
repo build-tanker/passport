@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/build-tanker/oauth2"
-	"github.com/build-tanker/passport/pkg/appcontext"
+	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/tokens"
 	"github.com/build-tanker/passport/pkg/translate"
 	"github.com/jmoiron/sqlx"
