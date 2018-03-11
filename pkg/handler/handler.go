@@ -8,22 +8,21 @@ import (
 
 	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/handler/v1/person"
-	"github.com/build-tanker/passport/pkg/handler/v1/ping"
 )
 
 // HTTPHandler is the type which can hanlde a URL
-type HTTPHandler func(w http.ResponseWriter, r *http.Request)
+type httpHandler func(w http.ResponseWriter, r *http.Request)
 
 // Router pipes requests to the correct handlers
 func Router(conf *config.Config, db *sqlx.DB) http.Handler {
 
-	pingHandler := ping.Handler{}
+	pingHandler := ping{}
 	personHandler := person.NewHandler(conf, db)
 	// tokenHandler := token.NewHandler(conf, db)
 
 	router := mux.NewRouter()
 	// GET__ .../ping
-	router.HandleFunc("/ping", pingHandler.Ping()).Methods(http.MethodGet)
+	router.HandleFunc("/ping", pingHandler.getPing()).Methods(http.MethodGet)
 
 	// GET__ .../login
 	router.HandleFunc("/login", personHandler.Login()).Methods(http.MethodGet)
@@ -33,7 +32,7 @@ func Router(conf *config.Config, db *sqlx.DB) http.Handler {
 	return router
 }
 
-func fakeHandler(conf *config.Config, db *sqlx.DB) HTTPHandler {
+func fakeHandler() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
