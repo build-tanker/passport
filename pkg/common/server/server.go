@@ -2,16 +2,14 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/phyber/negroni-gzip/gzip"
 	"github.com/urfave/negroni"
 
 	"github.com/build-tanker/passport/pkg/common/config"
-	"github.com/build-tanker/passport/pkg/translate"
+	"github.com/build-tanker/passport/pkg/handler"
 )
 
 // Server holds the web server
@@ -35,11 +33,9 @@ func (s *Server) Start() error {
 	server.Use(negroni.NewRecovery())
 	server.Use(negroni.NewLogger())
 
-	router := Router(s.conf, s.db)
-	server.Use(gzip.Gzip(gzip.DefaultCompression))
+	router := handler.Router(s.conf, s.db)
 	serverURL := fmt.Sprintf(":%s", s.conf.Port())
 
-	server.Use(recover())
 	server.UseHandler(router)
 	server.Run(serverURL)
 	return nil
@@ -50,17 +46,4 @@ func (s *Server) Stop() error {
 	// Not sure how to stop a server
 	s.server.Shutdown(nil)
 	return nil
-}
-
-func recover() negroni.HandlerFunc {
-	return negroni.HandlerFunc(func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-		defer func() {
-			if err := recover(); err != nil {
-				log.Println(translate.T("server:panic:recover"), err)
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-		}()
-		next(w, r)
-	})
 }

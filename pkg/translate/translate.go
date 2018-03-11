@@ -49,10 +49,6 @@ func populate() {
 
 	t.translations["postgresmock:connection:fail"] = "Should not get an error in creating a mock database"
 
-	t.translations["server:negroni:listen"] = "[negroni] Listening on "
-	t.translations["server:listen:fail"] = "Server: the server is not running anymore,"
-	t.translations["server:panic:recover"] = "Recovered from panic: %+v"
-
 	t.translations["people:oauth:failed"] = "Could not initialise OAuth2 Client"
 
 	t.populated = true

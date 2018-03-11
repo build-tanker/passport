@@ -1,4 +1,4 @@
-package people
+package person
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 
 	"github.com/build-tanker/oauth2"
 	"github.com/build-tanker/passport/pkg/common/config"
-	"github.com/build-tanker/passport/pkg/tokens"
+	"github.com/build-tanker/passport/pkg/token"
 	"github.com/build-tanker/passport/pkg/translate"
 	"github.com/jmoiron/sqlx"
 )
@@ -16,37 +16,33 @@ const (
 	redirectURLPath = "/v1/users"
 )
 
-// Service - inteface for people service
-type Service interface {
-	Login() (string, error)
-	Add(code string) error
+// Service for people
+type Service struct {
+	conf   *config.Config
+	store  store
+	oauth  oauth2.OAuth2
+	tokens *token.Service
 }
 
-type service struct {
-	conf      *config.Config
-	datastore Datastore
-	oauth     oauth2.OAuth2
-	tokens    tokens.Service
-}
-
-// NewService - create a new service for people
-func NewService(conf *config.Config, db *sqlx.DB) Service {
-	datastore := NewDatastore(conf, db)
+// New - create a new service for people
+func New(conf *config.Config, db *sqlx.DB) *Service {
+	store := newStore(conf, db)
 
 	clientID := conf.OAuthClientID()
 	clientSecret := conf.OAuthClientSecret()
 	redirctURL := fmt.Sprintf("%s%s", conf.Host(), redirectURLPath)
-	tokens := tokens.NewService(conf, db)
+	tokens := token.New(conf, db)
 
 	oauth, err := oauth2.NewOAuth2(clientID, clientSecret, redirctURL)
 	if err != nil {
 		log.Fatalln(translate.T("people:oauth:failed"))
 	}
 
-	return &service{conf, datastore, oauth, tokens}
+	return &Service{conf, store, oauth, tokens}
 }
 
-func (s *service) Login() (string, error) {
+// Login a person
+func (s *Service) Login() (string, error) {
 	url, err := s.oauth.GetAuthURL("", "", "", "", "", "")
 	fmt.Println(url)
 	if err != nil {
@@ -55,7 +51,8 @@ func (s *service) Login() (string, error) {
 	return url, nil
 }
 
-func (s *service) Add(code string) error {
+// Add or signup a person
+func (s *Service) Add(code string) error {
 	verified, accessToken, tokenType, expiresIn, refreshToken, _, _, err := s.oauth.GetAndVerifyToken(code)
 	if err != nil {
 		return err
@@ -74,10 +71,10 @@ func (s *service) Add(code string) error {
 	// If token is verified, save person and token details
 	personID := ""
 
-	person, err := s.datastore.ViewBySourceID(id)
+	person, err := s.store.viewBySourceID(id)
 	if err != nil {
 		// Saving person if not found
-		personID, err = s.datastore.Add("google", name, email, image, gender, id)
+		personID, err = s.store.add("google", name, email, image, gender, id)
 		if err != nil {
 			return err
 		}

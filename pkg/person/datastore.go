@@ -1,4 +1,4 @@
-package people
+package person
 
 import (
 	"time"
@@ -23,43 +23,43 @@ type Person struct {
 }
 
 // Datastore for people
-type Datastore interface {
-	Add(source, name, email, pictureURL, gender, sourceID string) (string, error)
-	View(id string) (Person, error)
-	ViewBySourceID(sourceID string) (Person, error)
-	Delete(id string) error
+type store interface {
+	add(source, name, email, pictureURL, gender, sourceID string) (string, error)
+	view(id string) (Person, error)
+	viewBySourceID(sourceID string) (Person, error)
+	delete(id string) error
 }
 
-type datastore struct {
+type persistentStore struct {
 	conf *config.Config
 	db   *sqlx.DB
 }
 
 // NewDatastore - create a new datastore for people
-func NewDatastore(conf *config.Config, db *sqlx.DB) Datastore {
-	return &datastore{
+func newStore(conf *config.Config, db *sqlx.DB) store {
+	return &persistentStore{
 		conf: conf,
 		db:   db,
 	}
 }
 
-func (s *datastore) Add(source, name, email, pictureURL, gender, sourceID string) (string, error) {
+func (s *persistentStore) add(source, name, email, pictureURL, gender, sourceID string) (string, error) {
 	id := s.generateUUID()
 	return id, nil
 }
 
-func (s *datastore) View(id string) (Person, error) {
+func (s *persistentStore) view(id string) (Person, error) {
 	return Person{}, nil
 }
 
-func (s *datastore) ViewBySourceID(sourceID string) (Person, error) {
+func (s *persistentStore) viewBySourceID(sourceID string) (Person, error) {
 	return Person{}, nil
 }
 
-func (s *datastore) Delete(id string) error {
+func (s *persistentStore) delete(id string) error {
 	return nil
 }
 
-func (s *datastore) generateUUID() string {
+func (s *persistentStore) generateUUID() string {
 	return uuid.NewV4().String()
 }

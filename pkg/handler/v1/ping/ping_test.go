@@ -1,4 +1,4 @@
-package pings
+package pings_test
 
 import (
 	"net/http"
@@ -8,13 +8,13 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/build-tanker/passport/pkg/common/config"
+	"github.com/build-tanker/passport/pkg/handler/v1/ping"
 )
 
 var pingHandlerTestConfig *config.Config
 
 func TestPingHandler(t *testing.T) {
-	pingHandler := PingHandler{}
-
+	pingHandler := pings.PingHandler{}
 	req, err := http.NewRequest("GET", "/ping", nil)
 	if err != nil {
 		t.Fatal(err)

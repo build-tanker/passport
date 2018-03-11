@@ -10,10 +10,6 @@ func WriteJSON(w http.ResponseWriter, status int, i interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(i)
-
-	// var b bytes.Buffer
-	// json.NewEncoder(&b).Encode(i)
-	// fmt.Printf(b.String())
 }
 
 // Response defines the standard output response

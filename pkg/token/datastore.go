@@ -1,4 +1,4 @@
-package tokens
+package token
 
 import (
 	"time"
@@ -24,28 +24,28 @@ type Token struct {
 }
 
 // Datastore for people
-type Datastore interface {
-	Add(person, source, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType string) (string, error)
+type store interface {
+	add(person, source, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType string) (string, error)
 }
 
-type datastore struct {
+type persistentStore struct {
 	conf *config.Config
 	db   *sqlx.DB
 }
 
 // NewDatastore - create a new datastore for people
-func NewDatastore(conf *config.Config, db *sqlx.DB) Datastore {
-	return &datastore{
+func newStore(conf *config.Config, db *sqlx.DB) store {
+	return &persistentStore{
 		conf: conf,
 		db:   db,
 	}
 }
 
-func (s *datastore) Add(person, source, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType string) (string, error) {
+func (s *persistentStore) add(person, source, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType string) (string, error) {
 	id := s.generateUUID()
 	return id, nil
 }
 
-func (s *datastore) generateUUID() string {
+func (s *persistentStore) generateUUID() string {
 	return uuid.NewV4().String()
 }
