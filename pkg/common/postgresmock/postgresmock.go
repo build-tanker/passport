@@ -8,8 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// NewMockSqlxDB - create a new mock sqlx db
-func NewMockSqlxDB() (*sqlx.DB, sqlmock.Sqlmock) {
+// New creates a new mock sqlx db
+func New() (*sqlx.DB, sqlmock.Sqlmock) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		log.Fatalf(translate.T("postgresmock:connection:fail"))
@@ -19,7 +19,7 @@ func NewMockSqlxDB() (*sqlx.DB, sqlmock.Sqlmock) {
 	return sqlxDB, mock
 }
 
-// CloseMockSqlxDB - close the mock connection
-func CloseMockSqlxDB(db *sqlx.DB) {
+// Close the mock connection
+func Close(db *sqlx.DB) {
 	db.Close()
 }

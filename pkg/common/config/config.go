@@ -18,8 +18,8 @@ type Config struct {
 	oauthClientSecret string
 }
 
-// NewConfig - create a new configuration
-func NewConfig(paths []string) *Config {
+// New creates a new configuration
+func New(paths []string) *Config {
 	config := &Config{}
 
 	viper.AutomaticEnv()

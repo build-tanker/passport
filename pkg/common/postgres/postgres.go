@@ -11,8 +11,8 @@ import (
 
 const connMaxLifetime = 30 * time.Minute
 
-// NewPostgres - initialize a new postgres connection
-func NewPostgres(url string, maxOpenConns int) *sqlx.DB {
+// New initialize a new postgres connection
+func New(url string, maxOpenConns int) *sqlx.DB {
 	db, err := sqlx.Open("postgres", url)
 	if err != nil {
 		log.Fatalln(translate.T("postgres:connection:failed"), err.Error())

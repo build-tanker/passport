@@ -22,8 +22,8 @@ type Server struct {
 	server *http.Server
 }
 
-// NewServer initialises a new server
-func NewServer(conf *config.Config, db *sqlx.DB) *Server {
+// New initialises a new server
+func New(conf *config.Config, db *sqlx.DB) *Server {
 	return &Server{
 		conf: conf,
 		db:   db,
