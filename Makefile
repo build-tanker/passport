@@ -62,7 +62,8 @@ vet:
 ### Check for linting issues
 lint:
 	@echo "$(GREEN_COLOR)Running lint $(END_COLOR)"
-	golint ./... | grep -v vendor
+	#golint ./... | grep -v vendor
+	go list ./... | xargs -L1 golint
 
 ### Copy config from template
 copy-config:
