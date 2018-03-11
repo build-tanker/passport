@@ -2,9 +2,7 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 
@@ -43,26 +41,6 @@ func (s *Server) Start() error {
 	server.Use(recover())
 	server.UseHandler(router)
 	server.Run(serverURL)
-
-	s.server = &http.Server{
-		Addr:         serverURL,
-		ReadTimeout:  3 * time.Second,
-		WriteTimeout: 3 * time.Second,
-		Handler:      server,
-	}
-
-	log.Println(translate.T("server:negroni:listen"), serverURL)
-	go func() {
-		err := s.server.ListenAndServe()
-		if err != nil {
-			if err.Error() != "http: Server closed" { // This is an error response not an error code
-				fmt.Println(translate.T("server:listen:fail"), err.Error())
-			}
-		}
-	}()
-
-	http.ListenAndServe(serverURL, server)
-
 	return nil
 }
 
