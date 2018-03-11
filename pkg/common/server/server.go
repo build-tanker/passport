@@ -33,11 +33,9 @@ func (s *Server) Start() error {
 	server.Use(negroni.NewRecovery())
 	server.Use(negroni.NewLogger())
 
-	router := handler.Router(s.conf, s.db)
-	serverURL := fmt.Sprintf(":%s", s.conf.Port())
-
-	server.UseHandler(router)
-	server.Run(serverURL)
+	newHandler := handler.New(s.conf, s.db)
+	server.UseHandler(newHandler.Route())
+	server.Run(fmt.Sprintf(":%s", s.conf.Port()))
 	return nil
 }
 

@@ -9,14 +9,14 @@ import (
 )
 
 func TestPingHandler(t *testing.T) {
-	pingHandler := ping{}
+	pingHandler := pingHandler{}
 	req, err := http.NewRequest("GET", "/ping", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	response := httptest.NewRecorder()
-	handler := http.HandlerFunc(pingHandler.getPing())
+	handler := http.HandlerFunc(pingHandler.ping())
 
 	handler.ServeHTTP(response, req)
 

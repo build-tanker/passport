@@ -1,4 +1,4 @@
-package token
+package handler
 
 import (
 	"net/http"
@@ -11,27 +11,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type httpHandler func(w http.ResponseWriter, r *http.Request)
-
-// Handler for people
-type Handler interface {
-}
-
-type handler struct {
-	conf   *config.Config
+type tokenHandler struct {
 	tokens *token.Service
 }
 
-// NewHandler - create a new handler for people
-func NewHandler(conf *config.Config, db *sqlx.DB) Handler {
-	tokenService := token.New(conf, db)
-	return &handler{
-		conf:   conf,
-		tokens: tokenService,
+func newTokenHandler(conf *config.Config, db *sqlx.DB) *tokenHandler {
+	return &tokenHandler{
+		tokens: token.New(conf, db),
 	}
 }
 
-func (h *handler) Add() httpHandler {
+func (t *tokenHandler) add() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// err := h.service.Add()
 		// if err != nil {
@@ -45,7 +35,7 @@ func (h *handler) Add() httpHandler {
 	}
 }
 
-func (h *handler) parseKeyFromQuery(r *http.Request, key string) string {
+func (t *tokenHandler) parseKeyFromQuery(r *http.Request, key string) string {
 	value := ""
 	if len(r.URL.Query()[key]) > 0 {
 		value = r.URL.Query()[key][0]
@@ -53,7 +43,7 @@ func (h *handler) parseKeyFromQuery(r *http.Request, key string) string {
 	return value
 }
 
-func (h *handler) parseKeyFromVars(r *http.Request, key string) string {
+func (t *tokenHandler) parseKeyFromVars(r *http.Request, key string) string {
 	vars := mux.Vars(r)
 	return vars[key]
 }
