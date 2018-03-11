@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -32,7 +33,6 @@ func NewServer(ctx *appcontext.AppContext, db *sqlx.DB) *Server {
 // Start a new server
 func (s *Server) Start() error {
 	config := s.ctx.GetConfig()
-	log := s.ctx.GetLogger()
 
 	server := negroni.New()
 	server.Use(negroni.NewRecovery())
@@ -53,7 +53,7 @@ func (s *Server) Start() error {
 		Handler:      server,
 	}
 
-	log.Infoln(translate.T("server:negroni:listen"), serverURL)
+	log.Println(translate.T("server:negroni:listen"), serverURL)
 	go func() {
 		err := s.server.ListenAndServe()
 		if err != nil {

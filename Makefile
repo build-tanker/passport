@@ -62,7 +62,7 @@ vet:
 ### Check for linting issues
 lint:
 	@echo "$(GREEN_COLOR)Running lint $(END_COLOR)"
-	golint ./... | grep -v vendor | grep -v "should have comment or be unexported"
+	golint ./... | grep -v vendor
 
 ### Copy config from template
 copy-config:

@@ -7,6 +7,7 @@ import (
 	_ "github.com/mattes/migrate/source/file" // get db migration from path
 
 	"database/sql"
+	"log"
 
 	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/translate"
@@ -26,7 +27,7 @@ func RunDatabaseMigrations(ctx *appcontext.AppContext) error {
 
 	err = m.Up()
 	if err == migrate.ErrNoChange {
-		ctx.GetLogger().Infoln(translate.T("postgres:migration:up:fail"))
+		log.Println(translate.T("postgres:migration:up:fail"))
 		return nil
 	}
 
@@ -34,7 +35,7 @@ func RunDatabaseMigrations(ctx *appcontext.AppContext) error {
 		return err
 	}
 
-	ctx.GetLogger().Infoln(translate.T("postgres:migration:up:success"))
+	log.Println(translate.T("postgres:migration:up:success"))
 	return nil
 }
 
@@ -46,10 +47,10 @@ func RollbackDatabaseMigration(ctx *appcontext.AppContext) error {
 	}
 
 	if err := m.Steps(-1); err != nil {
-		ctx.GetLogger().Infoln(translate.T("postgres:migration:down:fail"))
+		log.Println(translate.T("postgres:migration:down:fail"))
 		return nil
 	}
 
-	ctx.GetLogger().Infoln(translate.T("postgres:migration:down:success"))
+	log.Println(translate.T("postgres:migration:down:success"))
 	return nil
 }

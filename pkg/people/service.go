@@ -3,6 +3,7 @@ package people
 import (
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/build-tanker/oauth2"
 	"github.com/build-tanker/passport/pkg/common/appcontext"
@@ -39,7 +40,7 @@ func NewService(ctx *appcontext.AppContext, db *sqlx.DB) Service {
 
 	oauth, err := oauth2.NewOAuth2(clientID, clientSecret, redirctURL)
 	if err != nil {
-		ctx.GetLogger().Fatalln(translate.T("people:oauth:failed"))
+		log.Fatalln(translate.T("people:oauth:failed"))
 	}
 
 	return &service{ctx, datastore, oauth, tokens}

@@ -3,11 +3,9 @@ package people
 import (
 	"time"
 
+	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
-
-	"github.com/build-tanker/passport/pkg/common/appcontext"
-	"github.com/build-tanker/passport/pkg/common/logger"
 )
 
 // Person saves details for a user
@@ -35,7 +33,6 @@ type Datastore interface {
 type datastore struct {
 	ctx *appcontext.AppContext
 	db  *sqlx.DB
-	log logger.Logger
 }
 
 // NewDatastore - create a new datastore for people
@@ -43,7 +40,6 @@ func NewDatastore(ctx *appcontext.AppContext, db *sqlx.DB) Datastore {
 	return &datastore{
 		ctx: ctx,
 		db:  db,
-		log: ctx.GetLogger(),
 	}
 }
 

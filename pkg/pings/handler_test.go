@@ -3,14 +3,12 @@ package pings
 import (
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/common/config"
-	"github.com/build-tanker/passport/pkg/common/logger"
 )
 
 var pingHandlerTestContext *appcontext.AppContext
@@ -36,8 +34,7 @@ func TestPingHandler(t *testing.T) {
 func NewPingHandlerTestContext() *appcontext.AppContext {
 	if pingHandlerTestContext == nil {
 		conf := config.NewConfig([]string{".", "..", "../.."})
-		log := logger.NewLogger(conf, os.Stdout)
-		pingHandlerTestContext = appcontext.NewAppContext(conf, log)
+		pingHandlerTestContext = appcontext.NewAppContext(conf)
 	}
 	return pingHandlerTestContext
 }

@@ -27,3 +27,4 @@ passport.toml
 external/pgdata
 external/redisdata
 external/rabbitmq
+.vscode/

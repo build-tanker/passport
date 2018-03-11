@@ -1,13 +1,13 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/urfave/cli"
 
 	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/common/config"
-	"github.com/build-tanker/passport/pkg/common/logger"
 	"github.com/build-tanker/passport/pkg/common/postgres"
 	"github.com/build-tanker/passport/pkg/common/server"
 	"github.com/build-tanker/passport/pkg/translate"
@@ -15,12 +15,11 @@ import (
 
 func main() {
 	config := config.NewConfig([]string{".", "..", "../.."})
-	logger := logger.NewLogger(config, os.Stdout)
-	ctx := appcontext.NewAppContext(config, logger)
-	db := postgres.NewPostgres(logger, config.Database().ConnectionURL(), config.Database().MaxPoolSize())
+	ctx := appcontext.NewAppContext(config)
+	db := postgres.NewPostgres(config.Database().ConnectionURL(), config.Database().MaxPoolSize())
 	server := server.NewServer(ctx, db)
 
-	logger.Infoln(translate.T("passport:app:start"))
+	log.Println(translate.T("passport:app:start"))
 
 	app := cli.NewApp()
 	app.Name = "passport"
