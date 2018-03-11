@@ -7,6 +7,8 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/build-tanker/passport/pkg/common/config"
+	"github.com/build-tanker/passport/pkg/person"
+	"github.com/build-tanker/passport/pkg/token"
 )
 
 // Handler exposes all handlers
@@ -22,8 +24,13 @@ type httpHandler func(w http.ResponseWriter, r *http.Request)
 // New creates a new handler
 func New(conf *config.Config, db *sqlx.DB) *Handler {
 	pings := newPingHandler()
-	people := newPersonHandler(conf, db)
-	tokens := newTokenHandler(conf, db)
+
+	personService := person.New(conf, db)
+	tokenService := token.New(conf, db)
+
+	people := newPersonHandler(personService)
+	tokens := newTokenHandler(tokenService)
+
 	return &Handler{pings, people, tokens}
 }
 

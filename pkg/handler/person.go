@@ -3,19 +3,17 @@ package handler
 import (
 	"net/http"
 
-	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/common/responses"
 	"github.com/build-tanker/passport/pkg/person"
-	"github.com/jmoiron/sqlx"
 )
 
 type personHandler struct {
 	people *person.Service
 }
 
-func newPersonHandler(conf *config.Config, db *sqlx.DB) *personHandler {
+func newPersonHandler(service *person.Service) *personHandler {
 	return &personHandler{
-		people: person.New(conf, db),
+		people: service,
 	}
 }
 
