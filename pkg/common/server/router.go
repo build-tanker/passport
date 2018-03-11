@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/build-tanker/passport/pkg/common/appcontext"
+	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/people"
 	"github.com/build-tanker/passport/pkg/pings"
 )
@@ -14,14 +14,14 @@ import (
 type httpHandler func(w http.ResponseWriter, r *http.Request)
 
 // Router pipes requests to the correct handlers
-func Router(ctx *appcontext.AppContext, db *sqlx.DB) http.Handler {
+func Router(conf *config.Config, db *sqlx.DB) http.Handler {
 
 	pingHandler := pings.PingHandler{}
-	peopleHandler := people.NewHandler(ctx, db)
+	peopleHandler := people.NewHandler(conf, db)
 
 	router := mux.NewRouter()
 	// GET__ .../ping
-	router.HandleFunc("/ping", pingHandler.Ping(ctx)).Methods(http.MethodGet)
+	router.HandleFunc("/ping", pingHandler.Ping()).Methods(http.MethodGet)
 
 	// GET__ .../login
 	router.HandleFunc("/login", peopleHandler.Login()).Methods(http.MethodGet)
@@ -33,7 +33,7 @@ func Router(ctx *appcontext.AppContext, db *sqlx.DB) http.Handler {
 	return router
 }
 
-func fakeHandler(ctx *appcontext.AppContext, db *sqlx.DB) httpHandler {
+func fakeHandler(conf *config.Config, db *sqlx.DB) httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

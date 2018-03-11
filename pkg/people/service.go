@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/build-tanker/oauth2"
-	"github.com/build-tanker/passport/pkg/common/appcontext"
+	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/tokens"
 	"github.com/build-tanker/passport/pkg/translate"
 	"github.com/jmoiron/sqlx"
@@ -23,27 +23,27 @@ type Service interface {
 }
 
 type service struct {
-	ctx       *appcontext.AppContext
+	conf      *config.Config
 	datastore Datastore
 	oauth     oauth2.OAuth2
 	tokens    tokens.Service
 }
 
 // NewService - create a new service for people
-func NewService(ctx *appcontext.AppContext, db *sqlx.DB) Service {
-	datastore := NewDatastore(ctx, db)
+func NewService(conf *config.Config, db *sqlx.DB) Service {
+	datastore := NewDatastore(conf, db)
 
-	clientID := ctx.GetConfig().OAuthClientID()
-	clientSecret := ctx.GetConfig().OAuthClientSecret()
-	redirctURL := fmt.Sprintf("%s%s", ctx.GetConfig().Host(), redirectURLPath)
-	tokens := tokens.NewService(ctx, db)
+	clientID := conf.OAuthClientID()
+	clientSecret := conf.OAuthClientSecret()
+	redirctURL := fmt.Sprintf("%s%s", conf.Host(), redirectURLPath)
+	tokens := tokens.NewService(conf, db)
 
 	oauth, err := oauth2.NewOAuth2(clientID, clientSecret, redirctURL)
 	if err != nil {
 		log.Fatalln(translate.T("people:oauth:failed"))
 	}
 
-	return &service{ctx, datastore, oauth, tokens}
+	return &service{conf, datastore, oauth, tokens}
 }
 
 func (s *service) Login() (string, error) {

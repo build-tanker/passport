@@ -6,7 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/build-tanker/passport/pkg/common/appcontext"
+	"github.com/build-tanker/passport/pkg/common/config"
 )
 
 // Token saves token details for a user
@@ -29,15 +29,15 @@ type Datastore interface {
 }
 
 type datastore struct {
-	ctx *appcontext.AppContext
-	db  *sqlx.DB
+	conf *config.Config
+	db   *sqlx.DB
 }
 
 // NewDatastore - create a new datastore for people
-func NewDatastore(ctx *appcontext.AppContext, db *sqlx.DB) Datastore {
+func NewDatastore(conf *config.Config, db *sqlx.DB) Datastore {
 	return &datastore{
-		ctx: ctx,
-		db:  db,
+		conf: conf,
+		db:   db,
 	}
 }
 

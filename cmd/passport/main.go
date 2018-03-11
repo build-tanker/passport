@@ -6,7 +6,6 @@ import (
 
 	"github.com/urfave/cli"
 
-	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/common/postgres"
 	"github.com/build-tanker/passport/pkg/common/server"
@@ -14,10 +13,9 @@ import (
 )
 
 func main() {
-	config := config.NewConfig([]string{".", "..", "../.."})
-	ctx := appcontext.NewAppContext(config)
-	db := postgres.NewPostgres(config.Database().ConnectionURL(), config.Database().MaxPoolSize())
-	server := server.NewServer(ctx, db)
+	conf := config.NewConfig([]string{".", "..", "../.."})
+	db := postgres.NewPostgres(conf.Database().ConnectionURL(), conf.Database().MaxPoolSize())
+	server := server.NewServer(conf, db)
 
 	log.Println(translate.T("passport:app:start"))
 
@@ -38,14 +36,14 @@ func main() {
 			Name:  "migrate",
 			Usage: translate.T("passport:cli:migrate"),
 			Action: func(c *cli.Context) error {
-				return postgres.RunDatabaseMigrations(ctx)
+				return postgres.RunDatabaseMigrations(conf)
 			},
 		},
 		{
 			Name:  "rollback",
 			Usage: translate.T("passport:cli:rollback"),
 			Action: func(c *cli.Context) error {
-				return postgres.RollbackDatabaseMigration(ctx)
+				return postgres.RollbackDatabaseMigration(conf)
 			},
 		},
 	}

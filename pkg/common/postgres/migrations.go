@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"github.com/build-tanker/passport/pkg/common/config"
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/postgres"
@@ -9,15 +10,14 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/translate"
 )
 
 const migrationsPath = "file://./pkg/postgres/migrations"
 
 // RunDatabaseMigrations - run the next migration, needs to be run multiple times if there are multiple
-func RunDatabaseMigrations(ctx *appcontext.AppContext) error {
-	db, err := sql.Open("postgres", ctx.GetConfig().Database().ConnectionURL())
+func RunDatabaseMigrations(conf *config.Config) error {
+	db, err := sql.Open("postgres", conf.Database().ConnectionURL())
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	m, err := migrate.NewWithDatabaseInstance(migrationsPath, "postgres", driver)
@@ -40,8 +40,8 @@ func RunDatabaseMigrations(ctx *appcontext.AppContext) error {
 }
 
 // RollbackDatabaseMigration - rollback the database migration
-func RollbackDatabaseMigration(ctx *appcontext.AppContext) error {
-	m, err := migrate.New(migrationsPath, ctx.GetConfig().Database().ConnectionURL())
+func RollbackDatabaseMigration(conf *config.Config) error {
+	m, err := migrate.New(migrationsPath, conf.Database().ConnectionURL())
 	if err != nil {
 		return err
 	}

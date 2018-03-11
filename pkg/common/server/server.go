@@ -11,36 +11,34 @@ import (
 	"github.com/phyber/negroni-gzip/gzip"
 	"github.com/urfave/negroni"
 
-	"github.com/build-tanker/passport/pkg/common/appcontext"
+	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/translate"
 )
 
 // Server holds the web server
 type Server struct {
-	ctx    *appcontext.AppContext
+	conf   *config.Config
 	db     *sqlx.DB
 	server *http.Server
 }
 
 // NewServer initialises a new server
-func NewServer(ctx *appcontext.AppContext, db *sqlx.DB) *Server {
+func NewServer(conf *config.Config, db *sqlx.DB) *Server {
 	return &Server{
-		ctx: ctx,
-		db:  db,
+		conf: conf,
+		db:   db,
 	}
 }
 
 // Start a new server
 func (s *Server) Start() error {
-	config := s.ctx.GetConfig()
-
 	server := negroni.New()
 	server.Use(negroni.NewRecovery())
 	server.Use(negroni.NewLogger())
 
-	router := Router(s.ctx, s.db)
+	router := Router(s.conf, s.db)
 	server.Use(gzip.Gzip(gzip.DefaultCompression))
-	serverURL := fmt.Sprintf(":%s", config.Port())
+	serverURL := fmt.Sprintf(":%s", s.conf.Port())
 
 	server.Use(recover())
 	server.UseHandler(router)

@@ -5,7 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/build-tanker/passport/pkg/common/appcontext"
+	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/common/responses"
 	"github.com/gorilla/mux"
 )
@@ -17,15 +17,15 @@ type Handler interface {
 }
 
 type handler struct {
-	ctx     *appcontext.AppContext
+	conf    *config.Config
 	service Service
 }
 
 // NewHandler - create a new handler for people
-func NewHandler(ctx *appcontext.AppContext, db *sqlx.DB) Handler {
-	s := NewService(ctx, db)
+func NewHandler(conf *config.Config, db *sqlx.DB) Handler {
+	s := NewService(conf, db)
 	return &handler{
-		ctx:     ctx,
+		conf:    conf,
 		service: s,
 	}
 }
