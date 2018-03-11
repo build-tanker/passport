@@ -30,7 +30,7 @@ func NewErrorResponse(code string, message string) *Response {
 	return &Response{
 		Success: "false",
 		Errors: []ErrorResponse{
-			ErrorResponse{
+			{
 				Code:    code,
 				Message: message,
 			},
