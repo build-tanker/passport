@@ -14,7 +14,7 @@ import (
 
 func main() {
 	conf := config.New([]string{".", "..", "../.."})
-	db := postgres.New(conf.Database().ConnectionURL(), conf.Database().MaxPoolSize())
+	db := postgres.New(conf.ConnectionURL(), conf.MaxPoolSize())
 	server := server.New(conf, db)
 
 	log.Println(translate.T("passport:app:start"))

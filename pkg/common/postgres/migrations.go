@@ -17,7 +17,7 @@ const migrationsPath = "file://./pkg/postgres/migrations"
 
 // RunDatabaseMigrations - run the next migration, needs to be run multiple times if there are multiple
 func RunDatabaseMigrations(conf *config.Config) error {
-	db, err := sql.Open("postgres", conf.Database().ConnectionURL())
+	db, err := sql.Open("postgres", conf.ConnectionURL())
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	m, err := migrate.NewWithDatabaseInstance(migrationsPath, "postgres", driver)
@@ -41,7 +41,7 @@ func RunDatabaseMigrations(conf *config.Config) error {
 
 // RollbackDatabaseMigration - rollback the database migration
 func RollbackDatabaseMigration(conf *config.Config) error {
-	m, err := migrate.New(migrationsPath, conf.Database().ConnectionURL())
+	m, err := migrate.New(migrationsPath, conf.ConnectionURL())
 	if err != nil {
 		return err
 	}

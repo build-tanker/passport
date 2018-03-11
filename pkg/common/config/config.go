@@ -13,9 +13,16 @@ import (
 type Config struct {
 	port              string
 	host              string
-	database          DatabaseConfig
 	oauthClientID     string
 	oauthClientSecret string
+	database          struct {
+		name        string
+		host        string
+		user        string
+		password    string
+		port        int
+		maxPoolSize int
+	}
 }
 
 // New creates a new configuration
@@ -67,9 +74,31 @@ func (c *Config) OAuthClientSecret() string {
 	return c.oauthClientSecret
 }
 
-// Database - load the database config
-func (c *Config) Database() DatabaseConfig {
-	return c.database
+// ConnectionString - get the connectionstring to connect to postgres
+func (c *Config) ConnectionString() string {
+	return fmt.Sprintf("dbname=%s user=%s password='%s' host=%s port=%d sslmode=disable",
+		c.database.name,
+		c.database.user,
+		c.database.password,
+		c.database.host,
+		c.database.port,
+	)
+}
+
+// ConnectionURL - get the connection URL to connect to postgres
+func (c *Config) ConnectionURL() string {
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		c.database.user,
+		c.database.password,
+		c.database.host,
+		c.database.port,
+		c.database.name,
+	)
+}
+
+// MaxPoolSize - get the max pool size for db connections
+func (c *Config) MaxPoolSize() int {
+	return c.database.maxPoolSize
 }
 
 func (c *Config) readLatestConfig() {
@@ -86,5 +115,10 @@ func (c *Config) readLatestConfig() {
 		log.Fatalln(translate.T("config:oauth2clientsecret:fail"))
 	}
 
-	c.database = NewDatabaseConfig()
+	c.database.name = viper.GetString("database.name")
+	c.database.host = viper.GetString("database.host")
+	c.database.user = viper.GetString("database.user")
+	c.database.password = viper.GetString("database.password")
+	c.database.port = viper.GetInt("database.port")
+	c.database.maxPoolSize = viper.GetInt("database.maxPoolSize")
 }
