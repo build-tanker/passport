@@ -7,14 +7,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/build-tanker/passport/pkg/common/appcontext"
 	"github.com/build-tanker/passport/pkg/common/config"
 )
 
-var pingHandlerTestContext *appcontext.AppContext
+var pingHandlerTestConfig *config.Config
 
 func TestPingHandler(t *testing.T) {
-	ctx := NewPingHandlerTestContext()
 	pingHandler := PingHandler{}
 
 	req, err := http.NewRequest("GET", "/ping", nil)
@@ -23,7 +21,7 @@ func TestPingHandler(t *testing.T) {
 	}
 
 	response := httptest.NewRecorder()
-	handler := http.HandlerFunc(pingHandler.Ping(ctx))
+	handler := http.HandlerFunc(pingHandler.Ping())
 
 	handler.ServeHTTP(response, req)
 
@@ -31,10 +29,9 @@ func TestPingHandler(t *testing.T) {
 	assert.Equal(t, "{\"success\":\"pong\"}\n", response.Body.String())
 }
 
-func NewPingHandlerTestContext() *appcontext.AppContext {
-	if pingHandlerTestContext == nil {
-		conf := config.NewConfig([]string{".", "..", "../.."})
-		pingHandlerTestContext = appcontext.NewAppContext(conf)
+func NewPingHandlerTestConfig() *config.Config {
+	if pingHandlerTestConfig == nil {
+		pingHandlerTestConfig = config.New([]string{".", "..", "../.."})
 	}
-	return pingHandlerTestContext
+	return pingHandlerTestConfig
 }

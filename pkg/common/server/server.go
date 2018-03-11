@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
@@ -55,7 +56,7 @@ func recover() negroni.HandlerFunc {
 	return negroni.HandlerFunc(func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		defer func() {
 			if err := recover(); err != nil {
-				fmt.Printf(translate.T("server:panic:recover"), err)
+				log.Println(translate.T("server:panic:recover"), err)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}

@@ -11,11 +11,15 @@ import (
 
 // Config - structure to hold the configuration for passport
 type Config struct {
-	port              string
-	host              string
-	oauthClientID     string
-	oauthClientSecret string
-	database          struct {
+	server struct {
+		port string
+		host string
+	}
+	oauth2 struct {
+		clientID     string
+		clientSecret string
+	}
+	database struct {
 		name        string
 		host        string
 		user        string
@@ -45,7 +49,7 @@ func New(paths []string) *Config {
 
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		fmt.Printf(translate.T("config:change:reload"), e.Name)
+		log.Println(translate.T("config:change:reload"), e.Name)
 		config.readLatestConfig()
 	})
 
@@ -56,22 +60,22 @@ func New(paths []string) *Config {
 
 // Port - get the port from config
 func (c *Config) Port() string {
-	return c.port
+	return c.server.port
 }
 
 // Host - get the host from config
 func (c *Config) Host() string {
-	return c.host
+	return c.server.host
 }
 
 // OAuthClientID - get the oauth client id
 func (c *Config) OAuthClientID() string {
-	return c.oauthClientID
+	return c.oauth2.clientID
 }
 
 // OAuthClientSecret - get the oauth client secret
 func (c *Config) OAuthClientSecret() string {
-	return c.oauthClientSecret
+	return c.oauth2.clientSecret
 }
 
 // ConnectionString - get the connectionstring to connect to postgres
@@ -102,16 +106,16 @@ func (c *Config) MaxPoolSize() int {
 }
 
 func (c *Config) readLatestConfig() {
-	c.port = viper.GetString("server.port")
-	c.host = viper.GetString("server.host")
+	c.server.port = viper.GetString("server.port")
+	c.server.host = viper.GetString("server.host")
 
-	c.oauthClientID = viper.GetString("oauth2.id")
-	if c.oauthClientID == "" {
+	c.oauth2.clientID = viper.GetString("oauth2.id")
+	if c.oauth2.clientID == "" {
 		log.Fatalln(translate.T("config:oauth2clientid:fail"))
 	}
 
-	c.oauthClientSecret = viper.GetString("oauth2.secret")
-	if c.oauthClientSecret == "" {
+	c.oauth2.clientSecret = viper.GetString("oauth2.secret")
+	if c.oauth2.clientSecret == "" {
 		log.Fatalln(translate.T("config:oauth2clientsecret:fail"))
 	}
 
