@@ -1,4 +1,4 @@
-package pings_test
+package ping_test
 
 import (
 	"net/http"
@@ -14,7 +14,7 @@ import (
 var pingHandlerTestConfig *config.Config
 
 func TestPingHandler(t *testing.T) {
-	pingHandler := pings.PingHandler{}
+	pingHandler := ping.PingHandler{}
 	req, err := http.NewRequest("GET", "/ping", nil)
 	if err != nil {
 		t.Fatal(err)

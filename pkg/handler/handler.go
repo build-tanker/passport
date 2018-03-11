@@ -17,8 +17,9 @@ type HTTPHandler func(w http.ResponseWriter, r *http.Request)
 // Router pipes requests to the correct handlers
 func Router(conf *config.Config, db *sqlx.DB) http.Handler {
 
-	pingHandler := pings.PingHandler{}
+	pingHandler := ping.PingHandler{}
 	personHandler := person.NewHandler(conf, db)
+	// tokenHandler := token.NewHandler(conf, db)
 
 	router := mux.NewRouter()
 	// GET__ .../ping
