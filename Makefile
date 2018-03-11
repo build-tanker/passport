@@ -42,7 +42,7 @@ clean:
 init:
 	@echo "$(GREEN_COLOR)Initialising dep for the first time $(END_COLOR)"
 	go get -u github.com/golang/dep/cmd/dep
-	go get -u github.com/golang/lint/golint
+	go get -u golang.org/x/lint/golint
 
 ### Update dependencies
 update:
