@@ -13,7 +13,7 @@ import (
 	"github.com/build-tanker/passport/pkg/translate"
 )
 
-const migrationsPath = "file://./pkg/postgres/migrations"
+const migrationsPath = "file://./pkg/common/postgres/migrations"
 
 // RunDatabaseMigrations - run the next migration, needs to be run multiple times if there are multiple
 func RunDatabaseMigrations(conf *config.Config) error {
