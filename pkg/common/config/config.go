@@ -41,14 +41,11 @@ func New(paths []string) *Config {
 	viper.SetConfigName("passport")
 	viper.SetConfigType("toml")
 
-	viper.SetDefault("server.port", "4000")
-	viper.SetDefault("server.host", "http://localhost")
-
 	viper.ReadInConfig()
 
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		log.Println("Config file %s was edited, reloading config\n", e.Name)
+		log.Printf("Config file %s was edited, reloading config\n", e.Name)
 		config.readLatestConfig()
 	})
 
@@ -104,24 +101,34 @@ func (c *Config) MaxPoolSize() int {
 	return c.database.maxPoolSize
 }
 
+func (c *Config) mustGetString(key string) string {
+	value := viper.GetString(key)
+	if value == "" {
+		log.Fatalf("The key %s was not found, crashing\n", key)
+	}
+	return value
+}
+
+func (c *Config) getString(key string, defaultValue string) string {
+	value := viper.GetString(key)
+	if value == "" {
+		value = defaultValue
+	}
+	return value
+}
+
 func (c *Config) readLatestConfig() {
-	c.server.port = viper.GetString("server.port")
-	c.server.host = viper.GetString("server.host")
+	c.server.port = c.getString("server.port", "4000")
+	c.server.host = c.getString("server.host", "http://localhost")
 
-	c.oauth2.clientID = viper.GetString("oauth2.id")
-	if c.oauth2.clientID == "" {
-		log.Fatalln("Please enter the OAuth2 Client ID")
-	}
+	c.oauth2.clientID = c.mustGetString("oauth2.id")
+	c.oauth2.clientSecret = c.mustGetString("oauth2.secret")
 
-	c.oauth2.clientSecret = viper.GetString("oauth2.secret")
-	if c.oauth2.clientSecret == "" {
-		log.Fatalln("Please enter the OAuth2 Client Secret")
-	}
+	c.database.name = c.mustGetString("database.name")
+	c.database.host = c.mustGetString("database.host")
+	c.database.user = c.mustGetString("database.user")
+	c.database.password = c.mustGetString("database.password")
 
-	c.database.name = viper.GetString("database.name")
-	c.database.host = viper.GetString("database.host")
-	c.database.user = viper.GetString("database.user")
-	c.database.password = viper.GetString("database.password")
 	c.database.port = viper.GetInt("database.port")
 	c.database.maxPoolSize = viper.GetInt("database.maxPoolSize")
 }
