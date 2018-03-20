@@ -8,12 +8,11 @@ import (
 	"github.com/build-tanker/oauth2"
 	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/token"
-	"github.com/build-tanker/passport/pkg/translate"
 	"github.com/jmoiron/sqlx"
 )
 
 const (
-	redirectURLPath = "/v1/users"
+	redirectURLPath = "/v1/users/oauth"
 )
 
 // Service for people
@@ -35,7 +34,7 @@ func New(conf *config.Config, db *sqlx.DB) *Service {
 
 	oauth, err := oauth2.NewOAuth2(clientID, clientSecret, redirctURL)
 	if err != nil {
-		log.Fatalln(translate.T("people:oauth:failed"))
+		log.Fatalln("Could not initialise OAuth2 Client")
 	}
 
 	return &Service{conf, store, oauth, tokens}
@@ -44,15 +43,14 @@ func New(conf *config.Config, db *sqlx.DB) *Service {
 // Login a person
 func (s *Service) Login() (string, error) {
 	url, err := s.oauth.GetAuthURL("", "", "", "", "", "")
-	fmt.Println(url)
 	if err != nil {
 		return "", err
 	}
 	return url, nil
 }
 
-// Add or signup a person
-func (s *Service) Add(code string) error {
+// Signup or add a person
+func (s *Service) Signup(code string) error {
 	verified, accessToken, tokenType, expiresIn, refreshToken, _, _, err := s.oauth.GetAndVerifyToken(code)
 	if err != nil {
 		return err

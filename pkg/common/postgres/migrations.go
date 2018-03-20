@@ -9,8 +9,6 @@ import (
 
 	"database/sql"
 	"log"
-
-	"github.com/build-tanker/passport/pkg/translate"
 )
 
 const migrationsPath = "file://./pkg/migrations"
@@ -27,7 +25,7 @@ func RunDatabaseMigrations(conf *config.Config) error {
 
 	err = m.Up()
 	if err == migrate.ErrNoChange {
-		log.Println(translate.T("postgres:migration:up:fail"))
+		log.Println("Sadly, found no new migrations to run")
 		return nil
 	}
 
@@ -35,7 +33,7 @@ func RunDatabaseMigrations(conf *config.Config) error {
 		return err
 	}
 
-	log.Println(translate.T("postgres:migration:up:success"))
+	log.Println("Migration has been successfully done")
 	return nil
 }
 
@@ -47,10 +45,10 @@ func RollbackDatabaseMigration(conf *config.Config) error {
 	}
 
 	if err := m.Steps(-1); err != nil {
-		log.Println(translate.T("postgres:migration:down:fail"))
+		log.Println("We have already removed all migrations")
 		return nil
 	}
 
-	log.Println(translate.T("postgres:migration:down:success"))
+	log.Println("Rollback Successful")
 	return nil
 }

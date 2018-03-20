@@ -4,7 +4,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/build-tanker/passport/pkg/translate"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 )
@@ -15,17 +14,17 @@ const connMaxLifetime = 30 * time.Minute
 func New(url string, maxOpenConns int) *sqlx.DB {
 	db, err := sqlx.Open("postgres", url)
 	if err != nil {
-		log.Fatalln(translate.T("postgres:connection:failed"), err.Error())
+		log.Fatalln("Could not connect to database:", err.Error())
 	}
 
 	if err = db.Ping(); err != nil {
-		log.Fatalln(translate.T("postgres:ping:failed"), err.Error(), translate.T("postgres:ping:failed:2"), url)
+		log.Fatalln("Ping to the database failed:", err.Error(), "on connString", url)
 	}
 
 	db.SetMaxOpenConns(maxOpenConns)
 	db.SetMaxIdleConns(maxOpenConns)
 	db.SetConnMaxLifetime(connMaxLifetime)
-	log.Println(translate.T("postgres:connection:success"))
+	log.Println("Connected to database")
 
 	return db
 }

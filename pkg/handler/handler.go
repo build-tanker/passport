@@ -41,9 +41,9 @@ func (h *Handler) Route() http.Handler {
 	router.HandleFunc("/ping", h.pings.ping()).Methods(http.MethodGet)
 
 	// GET__ .../login
-	router.HandleFunc("/login", h.people.login()).Methods(http.MethodGet)
+	router.HandleFunc("/v1/users/login", h.people.login()).Methods(http.MethodGet)
 	// GET_ .../v1/users source=google&access_token=tkn&name=name&email=email&user_id=123
-	router.HandleFunc("/v1/users", h.people.signup()).Methods(http.MethodGet)
+	router.HandleFunc("/v1/users/oauth", h.people.signup()).Methods(http.MethodGet)
 
 	return router
 }
