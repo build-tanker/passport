@@ -8,15 +8,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPingHandler(t *testing.T) {
-	pingHandler := pingHandler{}
+func TestHealthHandler(t *testing.T) {
+	pingHandler := healthHandler{}
 	req, err := http.NewRequest("GET", "/ping", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	response := httptest.NewRecorder()
-	handler := http.HandlerFunc(pingHandler.ping())
+	handler := http.HandlerFunc(healthHandler.ping())
 
 	handler.ServeHTTP(response, req)
 

@@ -13,7 +13,7 @@ import (
 
 // Handler exposes all handlers
 type Handler struct {
-	pings  *pingHandler
+	health *healthHandler
 	people *personHandler
 	tokens *tokenHandler
 }
@@ -23,7 +23,7 @@ type httpHandler func(w http.ResponseWriter, r *http.Request)
 
 // New creates a new handler
 func New(conf *config.Config, db *sqlx.DB) *Handler {
-	pings := newPingHandler()
+	health := newHealthHandler()
 
 	personService := person.New(conf, db)
 	tokenService := token.New(conf, db)
@@ -31,14 +31,14 @@ func New(conf *config.Config, db *sqlx.DB) *Handler {
 	people := newPersonHandler(personService)
 	tokens := newTokenHandler(tokenService)
 
-	return &Handler{pings, people, tokens}
+	return &Handler{health, people, tokens}
 }
 
 // Route pipes requests to the correct handlers
 func (h *Handler) Route() http.Handler {
 	router := mux.NewRouter()
 	// GET__ .../ping
-	router.HandleFunc("/ping", h.pings.ping()).Methods(http.MethodGet)
+	router.HandleFunc("/ping", h.health.ping()).Methods(http.MethodGet)
 
 	// GET__ .../login
 	router.HandleFunc("/v1/users/login", h.people.login()).Methods(http.MethodGet)

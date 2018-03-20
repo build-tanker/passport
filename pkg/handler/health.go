@@ -6,13 +6,13 @@ import (
 	"github.com/build-tanker/tanker/pkg/responses"
 )
 
-type pingHandler struct{}
+type healthHandler struct{}
 
-func newPingHandler() *pingHandler {
-	return &pingHandler{}
+func newHealthHandler() *healthHandler {
+	return &healthHandler{}
 }
 
-func (p *pingHandler) ping() httpHandler {
+func (h *healthHandler) ping() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		responses.WriteJSON(w, http.StatusOK, responses.Response{Success: "pong"})
 	}
