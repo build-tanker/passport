@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/build-tanker/oauth2"
 	"github.com/build-tanker/passport/pkg/common/config"
+	"github.com/build-tanker/passport/pkg/oauth2"
 	"github.com/build-tanker/passport/pkg/token"
 	"github.com/jmoiron/sqlx"
 )
