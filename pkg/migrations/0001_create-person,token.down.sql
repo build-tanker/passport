@@ -1,2 +1,2 @@
-DROP TABLE person;
 DROP TABLE token;
+DROP TABLE person;

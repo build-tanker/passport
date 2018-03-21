@@ -40,7 +40,7 @@ type OAuth2 interface {
 	RefreshToken(refreshToken string) (string, error)
 	RevokeToken(accessToken string) error
 	GetProfileDetails(accessToken string) (email, name, image, id, gender string, err error)
-	GetAndVerifyToken(code string) (bool, string, string, string, string, string, string, error)
+	GetAndVerifyToken(code string) (string, string, string, string, string, string, error)
 }
 
 type oAuth2 struct {
@@ -186,10 +186,10 @@ func (o oAuth2) GetProfileDetails(accessToken string) (string, string, string, s
 
 }
 
-func (o oAuth2) GetAndVerifyToken(code string) (bool, string, string, string, string, string, string, error) {
+func (o oAuth2) GetAndVerifyToken(code string) (string, string, string, string, string, string, error) {
 	bytes, err := o.GetToken(code)
 	if err != nil {
-		return false, "", "", "", "", "", "", err
+		return "", "", "", "", "", "", err
 	}
 
 	accessToken := gjson.GetBytes(bytes, "access_token")
@@ -200,8 +200,8 @@ func (o oAuth2) GetAndVerifyToken(code string) (bool, string, string, string, st
 
 	userID, err := o.VerifyToken(accessToken.String())
 	if err != nil {
-		return false, "", "", "", "", "", "", err
+		return "", "", "", "", "", "", err
 	}
 
-	return true, accessToken.String(), tokenType.String(), expiresIn.String(), refreshToken.String(), idToken.String(), userID, err
+	return accessToken.String(), tokenType.String(), expiresIn.String(), refreshToken.String(), idToken.String(), userID, err
 }

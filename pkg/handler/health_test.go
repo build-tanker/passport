@@ -9,7 +9,7 @@ import (
 )
 
 func TestHealthHandler(t *testing.T) {
-	pingHandler := healthHandler{}
+	healthHandler := healthHandler{}
 	req, err := http.NewRequest("GET", "/ping", nil)
 	if err != nil {
 		t.Fatal(err)

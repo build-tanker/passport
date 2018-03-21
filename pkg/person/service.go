@@ -1,7 +1,6 @@
 package person
 
 import (
-	"errors"
 	"fmt"
 	"log"
 
@@ -49,15 +48,11 @@ func (s *Service) Login() (string, error) {
 	return url, nil
 }
 
-// Signup or add a person
-func (s *Service) Signup(code string) error {
-	verified, accessToken, tokenType, expiresIn, refreshToken, _, _, err := s.oauth.GetAndVerifyToken(code)
+// Verify or add a person
+func (s *Service) Verify(code string) error {
+	accessToken, tokenType, expiresIn, refreshToken, _, _, err := s.oauth.GetAndVerifyToken(code)
 	if err != nil {
 		return err
-	}
-
-	if !verified {
-		return errors.New("The token from google could not be verified")
 	}
 
 	// Get Profile details

@@ -43,7 +43,7 @@ func (h *Handler) Route() http.Handler {
 	// GET__ .../login
 	router.HandleFunc("/v1/users/login", h.people.login()).Methods(http.MethodGet)
 	// GET_ .../v1/users source=google&access_token=tkn&name=name&email=email&user_id=123
-	router.HandleFunc("/v1/users/oauth", h.people.signup()).Methods(http.MethodGet)
+	router.HandleFunc("/v1/users/verify", h.people.verify()).Methods(http.MethodGet)
 
 	return router
 }
