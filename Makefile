@@ -106,7 +106,7 @@ install:
 build: fmt vet lint coverage install end
 
 ### Build the latest source for the first time
-build_fresh: clean init update fmt vet lint copy-config db-clean db-migrate coverage compile install end
+build_fresh: clean init update fmt vet lint copy-config compile install db-clean db-migrate coverage end
 
 #
 # Receipes for docker
