@@ -45,26 +45,57 @@ func newStore(conf *config.Config, db *sqlx.DB) store {
 
 func (s *persistentStore) add(source, name, email, pictureURL, gender, sourceID string) (string, error) {
 	id := s.generateUUID()
-	// #TODO
+
+	_, err := s.db.Queryx("INSERT INTO person (id, source, name, email, picture_url, gender, source_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id", id, source, name, email, pictureURL, gender, sourceID)
+	if err != nil {
+		return "", err
+	}
+
 	return id, nil
 }
 
 func (s *persistentStore) view(id string) (Person, error) {
-	// #TODO
-	return Person{}, nil
+	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE id=$1 LIMIT 1", id)
+	if err != nil {
+		return Person{}, err
+	}
+
+	var person Person
+	for rows.Next() {
+		err = rows.StructScan(&person)
+		if err != nil {
+			return Person{}, err
+		}
+	}
+
+	return person, nil
 }
 
 func (s *persistentStore) viewBySourceID(sourceID string) (Person, error) {
-	// #TODO
-	return Person{}, nil
+	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE source_id=$1 LIMIT 1", sourceID)
+	if err != nil {
+		return Person{}, err
+	}
+
+	var person Person
+	for rows.Next() {
+		err = rows.StructScan(&person)
+		if err != nil {
+			return Person{}, err
+		}
+	}
+
+	return person, nil
 }
 
 func (s *persistentStore) delete(id string) error {
-	// #TODO
+	_, err := s.db.Queryx("UPDATE person SET deleted = TRUE WHERE id=$1", id)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (s *persistentStore) generateUUID() string {
-	// #TODO
 	return uuid.NewV4().String()
 }
