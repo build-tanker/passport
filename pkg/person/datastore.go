@@ -45,21 +45,26 @@ func newStore(conf *config.Config, db *sqlx.DB) store {
 
 func (s *persistentStore) add(source, name, email, pictureURL, gender, sourceID string) (string, error) {
 	id := s.generateUUID()
+	// #TODO
 	return id, nil
 }
 
 func (s *persistentStore) view(id string) (Person, error) {
+	// #TODO
 	return Person{}, nil
 }
 
 func (s *persistentStore) viewBySourceID(sourceID string) (Person, error) {
+	// #TODO
 	return Person{}, nil
 }
 
 func (s *persistentStore) delete(id string) error {
+	// #TODO
 	return nil
 }
 
 func (s *persistentStore) generateUUID() string {
+	// #TODO
 	return uuid.NewV4().String()
 }
