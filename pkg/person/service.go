@@ -1,17 +1,10 @@
 package person
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/build-tanker/passport/pkg/common/config"
 	"github.com/build-tanker/passport/pkg/oauth2"
 	"github.com/build-tanker/passport/pkg/token"
 	"github.com/jmoiron/sqlx"
-)
-
-const (
-	redirectURLPath = "/v1/users/verify"
 )
 
 // Service for people
@@ -23,19 +16,8 @@ type Service struct {
 }
 
 // New - create a new service for people
-func New(conf *config.Config, db *sqlx.DB) *Service {
+func New(conf *config.Config, db *sqlx.DB, oauth oauth2.OAuth2, tokens *token.Service) *Service {
 	store := newStore(conf, db)
-
-	clientID := conf.OAuthClientID()
-	clientSecret := conf.OAuthClientSecret()
-	redirctURL := fmt.Sprintf("%s%s", conf.Host(), redirectURLPath)
-	tokens := token.New(conf, db)
-
-	oauth, err := oauth2.NewOAuth2(clientID, clientSecret, redirctURL)
-	if err != nil {
-		log.Fatalln("Could not initialise OAuth2 Client")
-	}
-
 	return &Service{conf, store, oauth, tokens}
 }
 

@@ -1,14 +1,21 @@
 package handler
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/build-tanker/passport/pkg/common/config"
+	"github.com/build-tanker/passport/pkg/oauth2"
 	"github.com/build-tanker/passport/pkg/person"
 	"github.com/build-tanker/passport/pkg/token"
+)
+
+const (
+	oauthRedirectURLPath = "/v1/users/verify"
 )
 
 // Handler exposes all handlers
@@ -23,11 +30,24 @@ type httpHandler func(w http.ResponseWriter, r *http.Request)
 
 // New creates a new handler
 func New(conf *config.Config, db *sqlx.DB) *Handler {
-	health := newHealthHandler()
 
-	personService := person.New(conf, db)
+	// Create oAuth for person
+	clientID := conf.OAuthClientID()
+	clientSecret := conf.OAuthClientSecret()
+	redirctURL := fmt.Sprintf("%s%s", conf.Host(), oauthRedirectURLPath)
+	oauth, err := oauth2.NewOAuth2(clientID, clientSecret, redirctURL)
+	if err != nil {
+		log.Fatalln("Could not initialise OAuth2 Client")
+	}
+
+	// Create token
 	tokenService := token.New(conf, db)
 
+	// Create person
+	personService := person.New(conf, db, oauth, tokenService)
+
+	// Finally, create handlers
+	health := newHealthHandler()
 	people := newPersonHandler(personService)
 	tokens := newTokenHandler(tokenService)
 
