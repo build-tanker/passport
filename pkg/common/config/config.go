@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -39,7 +40,7 @@ func New(paths []string) *Config {
 	}
 
 	viper.SetConfigName("passport")
-	viper.SetConfigType("toml")
+	viper.SetConfigType("yaml")
 
 	viper.ReadInConfig()
 
@@ -109,6 +110,15 @@ func (c *Config) mustGetString(key string) string {
 	return value
 }
 
+func (c *Config) mustGetInt(key string) int {
+	value := c.mustGetString(key)
+	intValue, err := strconv.Atoi(value)
+	if err != nil {
+		log.Fatalf("They key %s was not an integer (%s), crashing\n", key, value)
+	}
+	return intValue
+}
+
 func (c *Config) getString(key string, defaultValue string) string {
 	value := viper.GetString(key)
 	if value == "" {
@@ -117,18 +127,25 @@ func (c *Config) getString(key string, defaultValue string) string {
 	return value
 }
 
+func (c *Config) getInt(key string, defaultValue int) int {
+	value := viper.GetInt(key)
+	if value == 0 {
+		value = defaultValue
+	}
+	return value
+}
+
 func (c *Config) readLatestConfig() {
-	c.server.port = c.getString("server.port", "4000")
-	c.server.host = c.getString("server.host", "http://localhost")
+	c.server.host = c.getString("SERVER_HOST", "http://localhost")
+	c.server.port = c.getString("SERVER_PORT", "4000")
 
-	c.oauth2.clientID = c.mustGetString("oauth2.id")
-	c.oauth2.clientSecret = c.mustGetString("oauth2.secret")
+	c.oauth2.clientID = c.mustGetString("OAUTH_ID")
+	c.oauth2.clientSecret = c.mustGetString("OAUTH_SECRET")
 
-	c.database.name = c.mustGetString("database.name")
-	c.database.host = c.mustGetString("database.host")
-	c.database.user = c.mustGetString("database.user")
-	c.database.password = c.mustGetString("database.password")
-
-	c.database.port = viper.GetInt("database.port")
-	c.database.maxPoolSize = viper.GetInt("database.maxPoolSize")
+	c.database.host = c.mustGetString("DB_HOST")
+	c.database.port = c.mustGetInt("DB_PORT")
+	c.database.name = c.mustGetString("DB_NAME")
+	c.database.user = c.mustGetString("DB_USER")
+	c.database.password = c.mustGetString("DB_PASSWORD")
+	c.database.maxPoolSize = c.getInt("DB_MAX_POOL_SIZE", 5)
 }

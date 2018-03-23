@@ -32,7 +32,7 @@ ALL_PACKAGES=$(go list ./... | grep -v "vendor")
 ### Clean temporary files
 clean:
 	@echo "$(GREEN_COLOR)Cleaning unwanted files $(END_COLOR)"
-	rm -rf passport.toml
+	rm -rf passport.yaml
 	rm -rf coverage.txt
 	rm -rf coverage.tmp
 	rm -rf coverage.html
@@ -67,7 +67,7 @@ lint:
 ### Copy config from template
 copy-config:
 	@echo "$(GREEN_COLOR)Copying config from sample $(END_COLOR)"
-	cp passport.toml.sample passport.toml
+	cp passport.yaml.sample passport.yaml
 
 ### Manually test all packages
 test:

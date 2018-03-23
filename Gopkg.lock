@@ -11,13 +11,13 @@
   branch = "master"
   name = "github.com/build-tanker/archer"
   packages = ["."]
-  revision = "5c6413c80a08cc8d1d97d57c519014c2ed379fa2"
+  revision = "88d14d20f10381673437e3da15dbe81fd90f8ff4"
 
 [[projects]]
   branch = "master"
-  name = "github.com/build-tanker/oauth2"
-  packages = ["."]
-  revision = "d24b7f421ad179bcea1453ca0227cc6ee7703493"
+  name = "github.com/build-tanker/tanker"
+  packages = ["pkg/responses"]
+  revision = "14df6391d0cd96c6e7d1c7cc7da01e0401f0e228"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -50,6 +50,7 @@
     ".",
     "hcl/ast",
     "hcl/parser",
+    "hcl/printer",
     "hcl/scanner",
     "hcl/strconv",
     "hcl/token",
@@ -57,7 +58,7 @@
     "json/scanner",
     "json/token"
   ]
-  revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
+  revision = "f40e974e75af4e271d97ce0fc917af5898ae7bda"
 
 [[projects]]
   branch = "master"
@@ -75,7 +76,7 @@
     ".",
     "oid"
   ]
-  revision = "88edab0803230a3898347e77b474f8c1820a1f20"
+  revision = "b2004221932bd6b13167ef654c81cffac36f7537"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -106,12 +107,6 @@
   packages = ["."]
   revision = "acdc4509485b587f5e675510c4f2c63e90ff68a8"
   version = "v1.1.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/phyber/negroni-gzip"
-  packages = ["gzip"]
-  revision = "ef6356a5d02936b65ca8e60b604ed6b078aac8d3"
 
 [[projects]]
   name = "github.com/pmezard/go-difflib"
@@ -155,8 +150,8 @@
 [[projects]]
   name = "github.com/spf13/viper"
   packages = ["."]
-  revision = "25b30aa063fc18e48662b86996252eabdcf2f0c7"
-  version = "v1.0.0"
+  revision = "b5e8006cbee93ec955a89ab31e0e3ce3204f3736"
+  version = "v1.0.2"
 
 [[projects]]
   name = "github.com/stretchr/testify"
@@ -192,7 +187,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7dca6fe1f43775aa6d1334576870ff63f978f539"
+  revision = "91ee8cde435411ca3f1cd365e8f20131aed4d0a1"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -216,6 +211,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2adbfc75d7a037c6aa297561b417fe80c85a230450b26aa748da3abd1f4da4af"
+  inputs-digest = "19c073424f696ae348412a5f2006615cdc977cff7aaa07430b73ccb6bb3f790e"
   solver-name = "gps-cdcl"
   solver-version = 1
