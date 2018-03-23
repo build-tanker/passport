@@ -22,6 +22,8 @@ coverage.tmp
 # Project Vendor folder
 vendor/
 passport.yaml
+passport.yaml.local
+passport.yaml.remote
 
 # External Data
 external/pgdata

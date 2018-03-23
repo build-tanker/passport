@@ -9,14 +9,12 @@ import (
 	"github.com/build-tanker/passport/pkg/person"
 	"github.com/build-tanker/passport/pkg/token"
 
-	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/build-tanker/passport/pkg/common/config"
-	"github.com/build-tanker/passport/pkg/common/postgresmock"
+	"github.com/build-tanker/passport/pkg/common/postgres"
 	"github.com/jmoiron/sqlx"
 )
 
 var sqlDB *sqlx.DB
-var sqlMock sqlmock.Sqlmock
 var conf *config.Config
 var oauthMock oauth2.OAuth2
 
@@ -60,14 +58,14 @@ func (m mockOauth) GetAndVerifyToken(code string) (oauth2.VerifyDetails, error) 
 
 // Initialise
 func initDB() {
-	if sqlDB == nil || sqlMock == nil {
-		sqlDB, sqlMock = postgresmock.New()
+	if sqlDB == nil {
+		sqlDB = postgres.New(conf.ConnectionURL(), conf.MaxPoolSize())
 	}
 }
 
 func initConf() {
 	if conf == nil {
-		conf = config.New([]string{"../common/config/testutil"})
+		conf = config.New([]string{".", "..", "../.."})
 	}
 }
 

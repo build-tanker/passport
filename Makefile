@@ -69,6 +69,14 @@ copy-config:
 	@echo "$(GREEN_COLOR)Copying config from sample $(END_COLOR)"
 	cp passport.yaml.sample passport.yaml
 
+db-clean:
+	@echo "$(GREEN_COLOR)Cleaning the database $(END_COLOR)"
+	$(APP_EXECUTABLE) rollback
+
+db-migrate:
+	@echo "$(GREEN_COLOR)Migrating the database to the latest state $(END_COLOR)"
+	$(APP_EXECUTABLE) migrate
+
 ### Manually test all packages
 test:
 	@echo "$(GREEN_COLOR)Running tests for all packages $(END_COLOR)"
@@ -98,7 +106,7 @@ install:
 build: fmt vet lint coverage install end
 
 ### Build the latest source for the first time
-build_fresh: clean init update fmt vet lint copy-config coverage compile install end
+build_fresh: clean init update fmt vet lint copy-config db-clean db-migrate coverage compile install end
 
 #
 # Receipes for docker

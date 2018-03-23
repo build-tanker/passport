@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/DATA-DOG/go-sqlmock"
-  packages = ["."]
-  revision = "d76b18b42f285b792bf985118980ce9eacea9d10"
-  version = "v1.3.0"
-
-[[projects]]
   branch = "master"
   name = "github.com/build-tanker/archer"
   packages = ["."]
@@ -211,6 +205,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "19c073424f696ae348412a5f2006615cdc977cff7aaa07430b73ccb6bb3f790e"
+  inputs-digest = "4a4f373d4db4b8f73044fb5aabe3308963c34ceac6c5cea78f403a4368c6cfb4"
   solver-name = "gps-cdcl"
   solver-version = 1

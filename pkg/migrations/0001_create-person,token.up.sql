@@ -4,7 +4,7 @@ CREATE TABLE person (
   name VARCHAR(128),
   email VARCHAR(128),
   picture_url VARCHAR(512),
-  gender VARCHAR(8),
+  gender VARCHAR(32),
   source_id VARCHAR(256),
   deleted BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT NOW(),
