@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	redirectURLPath = "/v1/users/oauth"
+	redirectURLPath = "/v1/users/verify"
 )
 
 // Service for people
@@ -50,13 +50,13 @@ func (s *Service) Login() (string, error) {
 
 // Verify or add a person
 func (s *Service) Verify(code string) error {
-	accessToken, tokenType, expiresIn, refreshToken, _, _, err := s.oauth.GetAndVerifyToken(code)
+	verifyDetails, err := s.oauth.GetAndVerifyToken(code)
 	if err != nil {
 		return err
 	}
 
 	// Get Profile details
-	email, name, image, id, gender, err := s.oauth.GetProfileDetails(accessToken)
+	profileDetails, err := s.oauth.GetProfileDetails(verifyDetails.AccessToken)
 	if err != nil {
 		return err
 	}
@@ -64,10 +64,10 @@ func (s *Service) Verify(code string) error {
 	// If token is verified, save person and token details
 	personID := ""
 
-	person, err := s.store.viewBySourceID(id)
+	person, err := s.store.viewBySourceID(profileDetails.ID)
 	if err != nil {
 		// Saving person if not found
-		personID, err = s.store.add("google", name, email, image, gender, id)
+		personID, err = s.store.add("google", profileDetails.Name, profileDetails.Email, profileDetails.Email, profileDetails.Gender, profileDetails.ID)
 		if err != nil {
 			return err
 		}
@@ -76,7 +76,7 @@ func (s *Service) Verify(code string) error {
 	personID = person.ID
 
 	// Add a new token
-	err = s.tokens.Add(personID, "google", accessToken, refreshToken, expiresIn, tokenType)
+	err = s.tokens.Add(personID, "google", verifyDetails.AccessToken, verifyDetails.RefreshToken, verifyDetails.ExpiresIn, verifyDetails.TokenType)
 	if err != nil {
 		return err
 	}
