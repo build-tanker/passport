@@ -11,9 +11,12 @@ before_install:
 jobs:
   include:
     - stage: test binary
-      script: make build_fresh
+      script:
+        - make build_fresh
+        - bash <(curl -s https://codecov.io/bash)
     - stage: push container
-      script: make deploy_quay
+      script:
+        - make compile
+        - make deploy_quay
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
