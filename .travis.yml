@@ -1,5 +1,8 @@
 language: go
 
+services:
+  - docker
+
 go:
   - 1.9.x
 
@@ -7,6 +10,7 @@ before_install:
 
 script:
   - make build_fresh
+  - make deploy_quay
   
 after_success:
   - bash <(curl -s https://codecov.io/bash)

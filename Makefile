@@ -87,7 +87,7 @@ compile:
 	@echo "$(GREEN_COLOR)Compiling linux and mac binaries in ./bin $(END_COLOR)"
 	mkdir -p bin/
 	go build -o bin/$(APP_EXECUTABLE) ./cmd/$(APP_EXECUTABLE)
-	CGO_ENABLED=0 GOOS=linux go build -o bin/$(APP_EXECUTABLE)_linux ./cmd/$(APP_EXECUTABLE)
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/$(APP_EXECUTABLE)_linux ./cmd/$(APP_EXECUTABLE)
 
 ### Calculate test coverage for the whole project (except vendors)
 coverage:
@@ -116,6 +116,9 @@ build_docker:
 	@echo "$(GREEN_COLOR)Building a docker image $(END_COLOR)"
 	docker build -t build-tanker/passport .
 
-#
-# Recipes for starting new projects
-#
+deploy_quay:
+	@echo "$(GREEN_COLOR)Pushing the docker image to Quay.io $(END_COLOR)"
+	docker login -u="$(QUAY_USERNAME)" -p="$(QUAY_PASSWORD)" quay.io
+	docker build -t build-tanker/passport .
+	docker tag build-tanker/passport quay.io/build-tanker/passport
+	docker push quay.io/build-tanker/passport
