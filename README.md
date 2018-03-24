@@ -6,6 +6,8 @@ Tanker is an Open source, Self Hosted, Mobile Releases Deployment tool for iOS a
 
 [![Build Status](https://travis-ci.org/build-tanker/passport.svg?branch=master)](https://travis-ci.org/build-tanker/passport)
 [![codecov](https://codecov.io/gh/build-tanker/passport/branch/master/graph/badge.svg)](https://codecov.io/gh/build-tanker/passport)
+[![Container Ready](https://quay.io/repository/build-tanker/passport/status)](https://quay.io/repository/build-tanker/passport/status)
+[![Go Report Card](https://goreportcard.com/badge/github.com/build-tanker/passport)](https://goreportcard.com/report/github.com/build-tanker/passport)
 
 ## Getting Started
 

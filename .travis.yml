@@ -16,6 +16,7 @@ jobs:
         - bash <(curl -s https://codecov.io/bash)
     - stage: push container
       script:
+        - make update
         - make compile
         - make deploy_quay
 
