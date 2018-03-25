@@ -122,3 +122,11 @@ deploy_quay:
 	docker build -t build-tanker/passport .
 	docker tag build-tanker/passport quay.io/build-tanker/passport
 	docker push quay.io/build-tanker/passport
+
+#
+# Deploy
+#
+
+create_deploy:
+	kubectl create -f k8s/secrets/passport-secrets.yaml
+	kubectl create -f k8s/passport-deploy.yaml

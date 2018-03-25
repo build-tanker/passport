@@ -1,0 +1,76 @@
+---
+apiVersion: "extensions/v1beta1"
+kind: "Deployment"
+metadata:
+  name: "passport"
+  namespace: "default"
+  labels:
+    app: "passport"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "passport"
+  template:
+    metadata:
+      labels:
+        app: "passport"
+    spec:
+      containers:
+      - name: "passport"
+        image: "quay.io/build-tanker/passport"
+        env:
+          - name: SERVER_HOST
+            value: "http://localhost"
+          - name: SERVER_PORT
+            value: "3000"
+          - name: OAUTH_ID
+            valueFrom:
+              secretKeyRef:
+                name: passport-secret
+                key: oauth_id
+          - name: OAUTH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: passport-secret
+                key: oauth_secret
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: passport-secret
+                key: db_host
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: passport-secret
+                key: db_name
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: passport-secret
+                key: db_user
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: passport-secret
+                key: db_password
+          - name: DB_MAX_POOL_SIZE
+            value: "5"
+---
+apiVersion: "autoscaling/v1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "passport-hpa"
+  namespace: "default"
+  labels:
+    app: "passport"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "passport"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
