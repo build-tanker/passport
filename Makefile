@@ -130,3 +130,6 @@ deploy_quay:
 create_deploy:
 	kubectl create -f k8s/secrets/passport-secrets.yaml
 	kubectl create -f k8s/passport-deploy.yaml
+
+rolling_update:
+	kubectl set image deployments/passport passport=quay.io/build-tanker/passport:latest

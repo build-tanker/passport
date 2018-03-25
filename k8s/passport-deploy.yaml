@@ -7,10 +7,11 @@ metadata:
   labels:
     app: "passport"
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       app: "passport"
+  minReadySeconds: 5
   template:
     metadata:
       labels:
@@ -19,6 +20,7 @@ spec:
       containers:
       - name: "passport"
         image: "quay.io/build-tanker/passport"
+        imagePullPolicy: Always
         env:
           - name: SERVER_HOST
             value: "http://localhost"
