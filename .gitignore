@@ -21,9 +21,12 @@ coverage.tmp
 
 # Project Vendor folder
 vendor/
+
+# Secrets
 passport.yaml
 passport.yaml.local
 passport.yaml.remote
+k8s/secrets/
 
 # External Data
 external/pgdata

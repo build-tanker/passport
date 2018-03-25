@@ -1,0 +1,15 @@
+apiVersion: "autoscaling/v1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "passport-hpa"
+  namespace: "default"
+  labels:
+    app: "passport"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "passport"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
