@@ -47,9 +47,9 @@ func (s *Service) Verify(code string) error {
 	personID := ""
 
 	person, err := s.store.viewBySourceID(profileDetails.ID)
-	if err != nil {
+	if err != nil || person.ID == "" {
 		// Saving person if not found
-		personID, err = s.store.add("google", profileDetails.Name, profileDetails.Email, profileDetails.Email, profileDetails.Gender, profileDetails.ID)
+		personID, err = s.store.add("google", profileDetails.Name, profileDetails.Email, profileDetails.Image, profileDetails.Gender, profileDetails.ID)
 		if err != nil {
 			return err
 		}
