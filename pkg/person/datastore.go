@@ -55,7 +55,7 @@ func (s *persistentStore) add(source, name, email, pictureURL, gender, sourceID 
 }
 
 func (s *persistentStore) view(id string) (Person, error) {
-	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE id=$1 LIMIT 1", id)
+	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE AND id=$1 LIMIT 1", id)
 	if err != nil {
 		return Person{}, err
 	}
@@ -72,7 +72,7 @@ func (s *persistentStore) view(id string) (Person, error) {
 }
 
 func (s *persistentStore) viewBySourceID(sourceID string) (Person, error) {
-	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE source_id=$1 LIMIT 1", sourceID)
+	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE AND source_id=$1 LIMIT 1", sourceID)
 	if err != nil {
 		return Person{}, err
 	}
