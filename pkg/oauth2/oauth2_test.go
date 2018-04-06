@@ -173,7 +173,7 @@ func TestGetAndVerifyToken(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "fakeAccessToken", verifyDetails.AccessToken)
 	assert.Equal(t, "fakeTokenType", verifyDetails.TokenType)
-	assert.Equal(t, "", verifyDetails.ExpiresIn)
+	assert.Equal(t, int64(0), verifyDetails.ExpiresIn)
 	assert.Equal(t, "fakeRefreshToken", verifyDetails.RefreshToken)
 	assert.Equal(t, "fakeIdToken", verifyDetails.IDToken)
 	assert.Equal(t, "fakeUserId", verifyDetails.UserID)

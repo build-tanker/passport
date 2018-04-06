@@ -49,7 +49,7 @@ func (m mockOauth) GetAndVerifyToken(code string) (oauth2.VerifyDetails, error) 
 	return oauth2.VerifyDetails{
 		AccessToken:  "fakeAccessToken",
 		TokenType:    "fakeTokenType",
-		ExpiresIn:    "fakeExpiresIn",
+		ExpiresIn:    3600,
 		RefreshToken: "fakeRefreshToken",
 		IDToken:      "fakeIDToken",
 		UserID:       "fakeUserID",
@@ -85,6 +85,6 @@ func TestPersonFlow(t *testing.T) {
 	url, _ := p.Login()
 	assert.Equal(t, "fakeAuthURL", url)
 
-	err := p.Verify("abc")
+	_, err := p.Verify("abc")
 	assert.Nil(t, err)
 }

@@ -64,7 +64,7 @@ type ProfileDetails struct {
 type VerifyDetails struct {
 	AccessToken  string
 	TokenType    string
-	ExpiresIn    string
+	ExpiresIn    int64
 	RefreshToken string
 	IDToken      string
 	UserID       string
@@ -225,7 +225,7 @@ func (o oAuth2) GetAndVerifyToken(code string) (VerifyDetails, error) {
 	return VerifyDetails{
 		AccessToken:  accessToken.String(),
 		TokenType:    gjson.GetBytes(bytes, "token_type").String(),
-		ExpiresIn:    gjson.GetBytes(bytes, "expires_in").String(),
+		ExpiresIn:    gjson.GetBytes(bytes, "expires_in").Int(),
 		RefreshToken: gjson.GetBytes(bytes, "refresh_token").String(),
 		IDToken:      gjson.GetBytes(bytes, "id_token").String(),
 		UserID:       userID,

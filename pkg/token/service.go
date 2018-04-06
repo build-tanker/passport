@@ -18,7 +18,7 @@ type Service struct {
 }
 
 // Add a token
-func (s *Service) Add(person, source, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType string) (string, error) {
+func (s *Service) Add(person, source, externalAccessToken, externalRefreshToken string, externalExpiresIn int64, externalTokenType string) (string, error) {
 	accessToken, err := s.store.add(person, "google", externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType)
 	if err != nil {
 		return "", err

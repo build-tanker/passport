@@ -25,7 +25,7 @@ type Token struct {
 
 // Datastore for people
 type store interface {
-	add(person, source, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType string) (string, error)
+	add(person, source, externalAccessToken, externalRefreshToken string, externalExpiresIn int64, externalTokenType string) (string, error)
 }
 
 type persistentStore struct {
@@ -41,7 +41,7 @@ func newStore(conf *config.Config, db *sqlx.DB) store {
 	}
 }
 
-func (s *persistentStore) add(person, source, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType string) (string, error) {
+func (s *persistentStore) add(person, source, externalAccessToken, externalRefreshToken string, externalExpiresIn int64, externalTokenType string) (string, error) {
 	id := s.generateUUID()
 	_, err := s.db.Queryx("INSERT INTO token (id, person, source, access_token, external_access_token, external_refresh_token, external_expires_in, external_token_type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id", id, person, source, id, externalAccessToken, externalRefreshToken, externalExpiresIn, externalTokenType)
 	if err != nil {
