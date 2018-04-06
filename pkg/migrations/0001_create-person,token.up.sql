@@ -15,7 +15,7 @@ CREATE TABLE token (
   id UUID NOT NULL PRIMARY KEY,
   person UUID NOT NULL REFERENCES person(id),
   source VARCHAR(128),
-  access_token VARCHAR(256),
+  access_token UUID,
   external_access_token VARCHAR(256),
   external_refresh_token VARCHAR(256),
   external_expires_in INT,

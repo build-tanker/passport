@@ -31,16 +31,16 @@ func (s *Service) Login() (string, error) {
 }
 
 // Verify or add a person
-func (s *Service) Verify(code string) error {
+func (s *Service) Verify(code string) (string, error) {
 	verifyDetails, err := s.oauth.GetAndVerifyToken(code)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// Get Profile details
 	profileDetails, err := s.oauth.GetProfileDetails(verifyDetails.AccessToken)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// If token is verified, save person and token details
@@ -51,17 +51,18 @@ func (s *Service) Verify(code string) error {
 		// Saving person if not found
 		personID, err = s.store.add("google", profileDetails.Name, profileDetails.Email, profileDetails.Image, profileDetails.Gender, profileDetails.ID)
 		if err != nil {
-			return err
+			return "", err
 		}
+	} else {
+		// Otherwise use the found person
+		personID = person.ID
 	}
-	// Otherwise use the found person
-	personID = person.ID
 
 	// Add a new token
-	err = s.tokens.Add(personID, "google", verifyDetails.AccessToken, verifyDetails.RefreshToken, verifyDetails.ExpiresIn, verifyDetails.TokenType)
+	accessToken, err := s.tokens.Add(personID, "google", verifyDetails.AccessToken, verifyDetails.RefreshToken, verifyDetails.ExpiresIn, verifyDetails.TokenType)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return accessToken, nil
 }

@@ -32,13 +32,18 @@ func (p *personHandler) login() httpHandler {
 func (p *personHandler) verify() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		code := parseKeyFromQuery(r, "code")
-		err := p.people.Verify(code)
+		accessToken, err := p.people.Verify(code)
 		if err != nil {
 			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:signup:error", err.Error()))
 			return
 		}
 
 		responses.WriteJSON(w, http.StatusOK, &responses.Response{
+			Data: struct {
+				AccessToken string `json:"accessToken"`
+			}{
+				AccessToken: accessToken,
+			},
 			Success: "true",
 		})
 	}
