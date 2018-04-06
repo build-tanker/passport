@@ -195,6 +195,12 @@ func (o oAuth2) GetProfileDetails(accessToken string) (ProfileDetails, error) {
 		return ProfileDetails{}, err
 	}
 
+	// Check for errors
+	errorMessage := gjson.GetBytes(bytes, "error.message").String()
+	if errorMessage != "" {
+		return ProfileDetails{}, errors.New(errorMessage)
+	}
+
 	return ProfileDetails{
 		Email:  gjson.GetBytes(bytes, "emails.0.value").String(),
 		Name:   gjson.GetBytes(bytes, "displayName").String(),
