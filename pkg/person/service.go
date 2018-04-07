@@ -43,19 +43,20 @@ func (s *Service) Verify(code string) (string, error) {
 		return "", err
 	}
 
-	// If token is verified, save person and token details
-	personID := ""
-
 	person, err := s.store.viewBySourceID(profileDetails.ID)
-	if err != nil || person.ID == "" {
+	if err != nil {
+		return "", err
+	}
+
+	personID := person.ID
+	// If token is verified, save person and token details
+
+	if personID == "" {
 		// Saving person if not found
 		personID, err = s.store.add("google", profileDetails.Name, profileDetails.Email, profileDetails.Image, profileDetails.Gender, profileDetails.ID)
 		if err != nil {
 			return "", err
 		}
-	} else {
-		// Otherwise use the found person
-		personID = person.ID
 	}
 
 	// Add a new token

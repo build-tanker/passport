@@ -57,12 +57,10 @@ func New(conf *config.Config, db *sqlx.DB) *Handler {
 // Route pipes requests to the correct handlers
 func (h *Handler) Route() http.Handler {
 	router := mux.NewRouter()
-	// GET__ .../ping
+
 	router.HandleFunc("/ping", h.health.ping()).Methods(http.MethodGet)
 
-	// GET__ .../login
 	router.HandleFunc("/v1/users/login", h.people.login()).Methods(http.MethodGet)
-	// GET_ .../v1/users source=google&access_token=tkn&name=name&email=email&user_id=123
 	router.HandleFunc("/v1/users/verify", h.people.verify()).Methods(http.MethodGet)
 
 	return router

@@ -20,6 +20,7 @@ CREATE TABLE token (
   external_refresh_token VARCHAR(256),
   external_expires_in INT,
   external_token_type VARCHAR(128),
+  deleted BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );

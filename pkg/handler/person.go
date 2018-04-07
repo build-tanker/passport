@@ -34,7 +34,7 @@ func (p *personHandler) verify() httpHandler {
 		code := parseKeyFromQuery(r, "code")
 		accessToken, err := p.people.Verify(code)
 		if err != nil {
-			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:signup:error", err.Error()))
+			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:verify:error", err.Error()))
 			return
 		}
 
