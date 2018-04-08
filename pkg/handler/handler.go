@@ -64,6 +64,8 @@ func (h *Handler) Route() http.Handler {
 	router.HandleFunc("/v1/users/verify", h.people.verify()).Methods(http.MethodGet)
 	router.HandleFunc("/v1/users/logout", h.people.logout()).Methods(http.MethodGet)
 
+	router.HandleFunc("/v1/tokens/validate", h.tokens.validate()).Methods(http.MethodGet)
+
 	return router
 }
 

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/build-tanker/passport/pkg/common/responses"
@@ -17,16 +18,21 @@ func newTokenHandler(service *token.Service) *tokenHandler {
 	}
 }
 
-func (t *tokenHandler) add() httpHandler {
+func (t *tokenHandler) validate() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// err := h.service.Add()
-		// if err != nil {
-		// 	responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:signup:error", err.Error()))
-		// 	return
-		// }
+		accessToken := parseKeyFromQuery(r, "accessToken")
+		if accessToken == "" {
+			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("token:validate:error", "AccessToken missing"))
+			return
+		}
+		valid, err := t.tokens.Validate(accessToken)
+		if err != nil {
+			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("token:validate:error", err.Error()))
+			return
+		}
 
 		responses.WriteJSON(w, http.StatusOK, &responses.Response{
-			Success: "true",
+			Success: fmt.Sprintf("%v", valid),
 		})
 	}
 }

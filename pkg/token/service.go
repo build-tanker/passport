@@ -30,3 +30,13 @@ func (s *Service) Add(person, source, externalAccessToken, externalRefreshToken 
 func (s *Service) Remove(accessToken string) error {
 	return s.store.remove(accessToken)
 }
+
+// Validate a token
+func (s *Service) Validate(accessToken string) (bool, error) {
+	token, err := s.store.validate(accessToken)
+	if err != nil {
+		return false, err
+	}
+
+	return (token.ID != ""), nil
+}

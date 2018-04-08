@@ -15,10 +15,12 @@ type Token struct {
 	Person               string    `db:"person" json:"person,omitempty"`
 	Source               string    `db:"source" json:"source,omitempty"`
 	AccessToken          string    `db:"access_token" json:"access_token,omitempty"`
+	ExpiresIn            int       `db:"expires_in" json:"expires_in,omitempty"`
 	ExternalAccessToken  string    `db:"external_access_token" json:"external_access_token,omitempty"`
 	ExternalRefreshToken string    `db:"external_refresh_token" json:"external_refresh_token,omitempty"`
 	ExternalExpiresIn    int       `db:"external_expires_in" json:"external_expires_in,omitempty"`
 	ExternalTokenType    string    `db:"external_token_type" json:"external_token_type,omitempty"`
+	Deleted              bool      `db:"deleted" json:"deleted,omitempty"`
 	CreatedAt            time.Time `db:"created_at" json:"created_at,omitempty"`
 	UpdatedAt            time.Time `db:"updated_at" json:"updated_at,omitempty"`
 }
@@ -27,6 +29,7 @@ type Token struct {
 type store interface {
 	add(person, source, externalAccessToken, externalRefreshToken string, externalExpiresIn int64, externalTokenType string) (string, error)
 	remove(accessToken string) error
+	validate(accessToken string) (Token, error)
 }
 
 type persistentStore struct {
@@ -50,6 +53,24 @@ func (s *persistentStore) add(person, source, externalAccessToken, externalRefre
 	}
 
 	return id, nil
+}
+
+func (s *persistentStore) validate(accessToken string) (Token, error) {
+	rows, err := s.db.Queryx("SELECT * FROM token WHERE deleted = FALSE AND access_token=$1 AND now() < created_at + (expires_in::TEXT || ' secs')::INTERVAL AND now() > created_at LIMIT 1", accessToken)
+
+	if err != nil {
+		return Token{}, err
+	}
+
+	var token Token
+	for rows.Next() {
+		err = rows.StructScan(&token)
+		if err != nil {
+			return Token{}, err
+		}
+	}
+
+	return token, nil
 }
 
 func (s *persistentStore) remove(accessToken string) error {
