@@ -26,6 +26,7 @@ type Token struct {
 // Datastore for people
 type store interface {
 	add(person, source, externalAccessToken, externalRefreshToken string, externalExpiresIn int64, externalTokenType string) (string, error)
+	remove(accessToken string) error
 }
 
 type persistentStore struct {
@@ -49,6 +50,14 @@ func (s *persistentStore) add(person, source, externalAccessToken, externalRefre
 	}
 
 	return id, nil
+}
+
+func (s *persistentStore) remove(accessToken string) error {
+	_, err := s.db.Queryx("UPDATE token SET deleted = TRUE WHERE access_token=$1", accessToken)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *persistentStore) generateUUID() string {

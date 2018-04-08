@@ -29,9 +29,33 @@ func (p *personHandler) login() httpHandler {
 	}
 }
 
+func (p *personHandler) logout() httpHandler {
+	return func(w http.ResponseWriter, r *http.Request) {
+		accessToken := parseKeyFromQuery(r, "accessToken")
+		if accessToken == "" {
+			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("people:logout:error", "AccessToken missing"))
+			return
+		}
+		err := p.people.Logout(accessToken)
+		if err != nil {
+			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("people:logout:error", err.Error()))
+			return
+		}
+
+		responses.WriteJSON(w, http.StatusOK, &responses.Response{
+			Success: "true",
+		})
+	}
+}
+
 func (p *personHandler) verify() httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		code := parseKeyFromQuery(r, "code")
+		if code == "" {
+			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:verify:error", "Verification code missing"))
+			return
+		}
+
 		accessToken, err := p.people.Verify(code)
 		if err != nil {
 			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("auth:verify:error", err.Error()))

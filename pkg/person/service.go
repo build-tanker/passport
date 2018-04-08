@@ -30,6 +30,11 @@ func (s *Service) Login() (string, error) {
 	return url, nil
 }
 
+// Logout an accessToken
+func (s *Service) Logout(accessToken string) error {
+	return s.tokens.Remove(accessToken)
+}
+
 // Verify or add a person
 func (s *Service) Verify(code string) (string, error) {
 	verifyDetails, err := s.oauth.GetAndVerifyToken(code)

@@ -25,3 +25,8 @@ func (s *Service) Add(person, source, externalAccessToken, externalRefreshToken 
 	}
 	return accessToken, nil
 }
+
+// Remove a token
+func (s *Service) Remove(accessToken string) error {
+	return s.store.remove(accessToken)
+}
