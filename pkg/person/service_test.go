@@ -85,6 +85,15 @@ func TestPersonFlow(t *testing.T) {
 	url, _ := p.Login()
 	assert.Equal(t, "fakeAuthURL", url)
 
-	_, err := p.Verify("abc")
+	accessToken, err := p.Verify("abc")
 	assert.Nil(t, err)
+	assert.Equal(t, 36, len(accessToken))
+
+	valid, err := tokens.Validate(accessToken)
+	assert.Nil(t, err)
+	assert.Equal(t, true, valid)
+
+	err = p.Logout(accessToken)
+	assert.Nil(t, err)
+
 }
