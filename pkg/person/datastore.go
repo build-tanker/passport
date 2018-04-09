@@ -14,7 +14,7 @@ type Person struct {
 	Source     string    `db:"source" json:"source,omitempty"`
 	Name       string    `db:"name" json:"name,omitempty"`
 	Email      string    `db:"email" json:"email,omitempty"`
-	PictureURL string    `db:"pictureURL" json:"pictureURL,omitempty"`
+	PictureURL string    `db:"picture_url" json:"picture_url,omitempty"`
 	Gender     string    `db:"gender" json:"gender,omitempty"`
 	SourceID   string    `db:"source_id" json:"source_id,omitempty"`
 	Deleted    bool      `db:"deleted" json:"deleted,omitempty"`
