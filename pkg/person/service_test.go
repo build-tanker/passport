@@ -79,7 +79,7 @@ func initMockOauth() {
 	oauthMock = &mockOauth{}
 }
 
-func CleanUpDatabase(db *sqlx.DB) error {
+func cleanUpDatabase(db *sqlx.DB) error {
 	_, err := db.Queryx("DELETE FROM token WHERE external_access_token='fakeAccessToken'")
 	if err != nil {
 		return err
@@ -100,7 +100,7 @@ func TestPersonFlow(t *testing.T) {
 	initMockOauth()
 	tokens := token.New(conf, sqlDB)
 
-	CleanUpDatabase(sqlDB)
+	cleanUpDatabase(sqlDB)
 
 	p := person.New(conf, sqlDB, oauthMock, tokens)
 
@@ -118,6 +118,6 @@ func TestPersonFlow(t *testing.T) {
 	err = p.Logout(accessToken)
 	assert.Nil(t, err)
 
-	CleanUpDatabase(sqlDB)
+	cleanUpDatabase(sqlDB)
 
 }
