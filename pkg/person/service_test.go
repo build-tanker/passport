@@ -63,6 +63,12 @@ func initDB() {
 	}
 }
 
+func closeDB() {
+	if sqlDB != nil {
+		sqlDB.Close()
+	}
+}
+
 func initConf() {
 	if conf == nil {
 		conf = config.New([]string{".", "..", "../.."})
@@ -73,12 +79,28 @@ func initMockOauth() {
 	oauthMock = &mockOauth{}
 }
 
+func CleanUpDatabase(db *sqlx.DB) error {
+	_, err := db.Queryx("DELETE FROM token WHERE external_access_token='fakeAccessToken'")
+	if err != nil {
+		return err
+	}
+	_, err = db.Queryx("DELETE FROM person WHERE email='fakeEmail'")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Test
 func TestPersonFlow(t *testing.T) {
 	initConf()
 	initDB()
+	defer closeDB()
+
 	initMockOauth()
 	tokens := token.New(conf, sqlDB)
+
+	CleanUpDatabase(sqlDB)
 
 	p := person.New(conf, sqlDB, oauthMock, tokens)
 
@@ -95,5 +117,7 @@ func TestPersonFlow(t *testing.T) {
 
 	err = p.Logout(accessToken)
 	assert.Nil(t, err)
+
+	CleanUpDatabase(sqlDB)
 
 }
