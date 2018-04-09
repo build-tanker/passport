@@ -25,9 +25,7 @@ type Person struct {
 // Datastore for people
 type store interface {
 	add(source, name, email, pictureURL, gender, sourceID string) (string, error)
-	view(id string) (Person, error)
 	viewBySourceID(sourceID string) (Person, error)
-	delete(id string) error
 }
 
 type persistentStore struct {
@@ -54,23 +52,6 @@ func (s *persistentStore) add(source, name, email, pictureURL, gender, sourceID 
 	return id, nil
 }
 
-func (s *persistentStore) view(id string) (Person, error) {
-	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE AND id=$1 LIMIT 1", id)
-	if err != nil {
-		return Person{}, err
-	}
-
-	var person Person
-	for rows.Next() {
-		err = rows.StructScan(&person)
-		if err != nil {
-			return Person{}, err
-		}
-	}
-
-	return person, nil
-}
-
 func (s *persistentStore) viewBySourceID(sourceID string) (Person, error) {
 	rows, err := s.db.Queryx("SELECT * FROM person WHERE deleted = FALSE AND source_id=$1 LIMIT 1", sourceID)
 	if err != nil {
@@ -86,14 +67,6 @@ func (s *persistentStore) viewBySourceID(sourceID string) (Person, error) {
 	}
 
 	return person, nil
-}
-
-func (s *persistentStore) delete(id string) error {
-	_, err := s.db.Queryx("UPDATE person SET deleted = TRUE WHERE id=$1", id)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (s *persistentStore) generateUUID() string {
