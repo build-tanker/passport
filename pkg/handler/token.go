@@ -25,13 +25,18 @@ func (t *tokenHandler) validate() httpHandler {
 			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("token:validate:error", "AccessToken missing"))
 			return
 		}
-		valid, err := t.tokens.Validate(accessToken)
+		valid, person, err := t.tokens.Validate(accessToken)
 		if err != nil {
 			responses.WriteJSON(w, http.StatusBadRequest, responses.NewErrorResponse("token:validate:error", err.Error()))
 			return
 		}
 
 		responses.WriteJSON(w, http.StatusOK, &responses.Response{
+			Data: struct {
+				Person string `json:"person"`
+			}{
+				Person: person,
+			},
 			Success: fmt.Sprintf("%v", valid),
 		})
 	}

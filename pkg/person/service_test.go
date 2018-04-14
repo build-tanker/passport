@@ -111,7 +111,7 @@ func TestPersonFlow(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 36, len(accessToken))
 
-	valid, err := tokens.Validate(accessToken)
+	valid, _, err := tokens.Validate(accessToken)
 	assert.Nil(t, err)
 	assert.Equal(t, true, valid)
 

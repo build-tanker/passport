@@ -32,11 +32,11 @@ func (s *Service) Remove(accessToken string) error {
 }
 
 // Validate a token
-func (s *Service) Validate(accessToken string) (bool, error) {
+func (s *Service) Validate(accessToken string) (bool, string, error) {
 	token, err := s.store.validate(accessToken)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
-	return (token.ID != ""), nil
+	return (token.ID != ""), token.Person, nil
 }

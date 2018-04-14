@@ -64,17 +64,20 @@ func TestTokenFlow(t *testing.T) {
 	_, err := tok.Add("AAE2C7DA-859E-4066-B84F-D55E06EFAF69", "fakeSource", "fakeExternalAccessToken", "fakeExternalRefreshToken", int64(3600), "fakeExternalTokenType")
 	assert.Contains(t, err.Error(), "violates foreign key constraint")
 
-	valid, err := tok.Validate("AAE2C7DA-859E-4066-B84F-D55E06EFAF69")
+	valid, person, err := tok.Validate("AAE2C7DA-859E-4066-B84F-D55E06EFAF69")
 	assert.Nil(t, err)
+	assert.Equal(t, false, valid)
+	assert.Equal(t, "", person)
 
 	prepareDatabase(sqlDB)
 
 	accessToken, err := tok.Add("AAE2C7DA-859E-4066-B84F-D55E06EFAF70", "fakeSource", "fakeExternalAccessToken", "fakeExternalRefreshToken", int64(3600), "fakeExternalTokenType")
 	assert.Nil(t, err)
 
-	valid, err = tok.Validate(accessToken)
+	valid, person, err = tok.Validate(accessToken)
 	assert.Nil(t, err)
 	assert.Equal(t, true, valid)
+	assert.Equal(t, "aae2c7da-859e-4066-b84f-d55e06efaf70", person)
 
 	err = tok.Remove(accessToken)
 	assert.Nil(t, err)
